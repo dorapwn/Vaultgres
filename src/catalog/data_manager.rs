@@ -4,11 +4,10 @@ use super::update_delete_executor::UpdateDeleteExecutor;
 use super::value::Value;
 use crate::catalog::schema::TableSchema;
 use crate::parser::ast::{
-    ColumnDef, CompositeTypeDef, DataType, EnumTypeDef, Expr, ForeignKeyAction, ForeignKeyDef,
-    OrderByExpr, SelectStmt,
+    CompositeTypeDef, EnumTypeDef, Expr, ForeignKeyDef, OrderByExpr, SelectStmt,
 };
 use crate::transaction::{Transaction, TransactionManager};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
 pub struct DataManager {

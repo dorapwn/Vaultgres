@@ -4,15 +4,12 @@
 //! following PostgreSQL-style regression test patterns.
 
 use std::sync::Arc;
-use vaultgres::catalog::{Catalog, Column, DataType, EnumTypeDef, TableSchema, Tuple, Value};
+use vaultgres::catalog::{Catalog, DataType, TableSchema, Tuple, Value};
 use vaultgres::parser::ast::ColumnDef;
 use vaultgres::parser::ast::{
-    AggregateFunc, BinaryOperator, ColumnDef as AstColumnDef, DataType as AstDataType, Expr,
-    OrderByExpr, SelectStmt, UnaryOperator,
+    AggregateFunc, BinaryOperator, Expr, OrderByExpr, SelectStmt, UnaryOperator,
 };
 use vaultgres::transaction::{Snapshot, TransactionManager};
-
-use std::collections::HashMap;
 
 // ============================================================================
 // Catalog Test Helpers

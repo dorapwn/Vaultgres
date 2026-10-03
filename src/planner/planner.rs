@@ -8,11 +8,11 @@ use crate::executor::operators::information_schema_scan::InformationSchemaScanEx
 use crate::executor::operators::seq_scan::SeqScanExecutor as OperatorSeqScanExecutor;
 use crate::executor::volcano::{
     CTEExecutor, DistinctExecutor, FilterExecutor, HashAggExecutor, JoinExecutor, JoinType,
-    LimitExecutor, ProjectExecutor, SortExecutor, SubqueryScanExecutor, UnionExecutor, UnionType,
-    VolcanoRecursiveCTEExecutor, VolcanoRecursiveCTEState, WindowExecutor,
+    LimitExecutor, ProjectExecutor, SortExecutor, SubqueryScanExecutor, UnionExecutor,
+    WindowExecutor,
 };
 use crate::parser::ast::{
-    AggregateFunc, CTE, ColumnDef, DataType, Expr, SelectStmt, WindowFunc, WithStmt,
+    AggregateFunc, ColumnDef, DataType, Expr, SelectStmt, WindowFunc, WithStmt,
 };
 
 use std::collections::HashMap;

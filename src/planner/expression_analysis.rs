@@ -55,7 +55,7 @@ pub fn extract_window_exprs(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::ast::{AggregateFunc, BinaryOperator, UnaryOperator};
+    use crate::parser::ast::AggregateFunc;
 
     #[test]
     fn test_contains_aggregate_with_aggregate() {

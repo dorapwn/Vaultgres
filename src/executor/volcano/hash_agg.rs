@@ -4,10 +4,10 @@ use crate::catalog::{Aggregate, Catalog, TableSchema, Value};
 use crate::executor::eval::Eval;
 use crate::executor::operators::executor::{Executor, ExecutorError, Tuple};
 use crate::executor::volcano::aggregate_state::{AggregateState, CustomAggregateState, hash_value};
-use crate::parser::ast::{AggregateFunc, DataType, Expr};
+use crate::parser::ast::{AggregateFunc, Expr};
 use std::collections::HashMap;
 use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
+use std::hash::Hasher;
 use std::sync::Arc;
 
 pub struct HashAggExecutor {
