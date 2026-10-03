@@ -31,6 +31,13 @@ pub fn build_result_set(
             let (type_oid, type_size) = if !rows.is_empty() && i < rows[0].len() {
                 value_to_pg_type(&rows[0][i])
             } else {
+                // Empty result set: no row data to infer from. Default
+                // to TEXT (OID 25) which is the most permissive type for
+                // a RowDescription; clients treat the column as opaque
+                // until they see actual data. Previously this branch
+                // hardcoded the same value, but kept as a single named
+                // OID for clarity.
+                // Tracked by https://github.com/neoalienson/Vaultgres/issues/20
                 (25, -1)
             };
 

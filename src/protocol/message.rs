@@ -12,6 +12,8 @@ pub enum Message {
 pub enum Response {
     AuthenticationOk,
     ReadyForQuery,
+    ParameterStatus { name: String, value: String },
+    BackendKeyData { pid: i32, secret: i32 },
     RowDescription { columns: Vec<String> },
     DataRow { values: Vec<Vec<u8>> },
     CommandComplete { tag: String },
@@ -59,6 +61,19 @@ impl Response {
                 writer.write_all(b"Z")?;
                 writer.write_all(&5i32.to_be_bytes())?;
                 writer.write_all(b"I")?;
+            }
+            Response::ParameterStatus { name, value } => {
+                writer.write_all(b"S")?;
+                let payload = format!("{}\0{}\0", name, value);
+                let len: i32 = 4 + payload.len() as i32;
+                writer.write_all(&len.to_be_bytes())?;
+                writer.write_all(payload.as_bytes())?;
+            }
+            Response::BackendKeyData { pid, secret } => {
+                writer.write_all(b"K")?;
+                writer.write_all(&12i32.to_be_bytes())?;
+                writer.write_all(&pid.to_be_bytes())?;
+                writer.write_all(&secret.to_be_bytes())?;
             }
             Response::CommandComplete { tag } => {
                 writer.write_all(b"C")?;
@@ -214,5 +229,38 @@ mod tests {
         assert_eq!(buf[0], b'D');
         let field_count = i16::from_be_bytes([buf[5], buf[6]]);
         assert_eq!(field_count, 3);
+    }
+
+    #[test]
+    fn test_parameter_status_writes_tag_and_payload() {
+        let mut buf = Vec::new();
+        Response::ParameterStatus {
+            name: "client_encoding".to_string(),
+            value: "UTF8".to_string(),
+        }
+        .write(&mut buf)
+        .unwrap();
+        assert_eq!(buf[0], b'S');
+        // length includes the 4-byte length itself + the null-terminated
+        // name and value bytes ("client_encoding\0UTF8\0" = 21 bytes:
+        //   15 for "client_encoding" + 1 null + 4 for "UTF8" + 1 null).
+        let expected_len = 4 + 21;
+        assert_eq!(i32::from_be_bytes([buf[1], buf[2], buf[3], buf[4]]), expected_len);
+        // Payload starts at offset 5.
+        assert_eq!(&buf[5..5 + 15], b"client_encoding");
+        assert_eq!(buf[5 + 15], 0); // null terminator after name
+        assert_eq!(&buf[5 + 16..5 + 16 + 4], b"UTF8");
+        assert_eq!(buf[5 + 16 + 4], 0); // null terminator after value
+    }
+
+    #[test]
+    fn test_backend_key_data_writes_tag_pid_secret() {
+        let mut buf = Vec::new();
+        Response::BackendKeyData { pid: 1234, secret: 5678 }.write(&mut buf).unwrap();
+        assert_eq!(buf[0], b'K');
+        // length is fixed: 12 (4 + 4 + 4)
+        assert_eq!(i32::from_be_bytes([buf[1], buf[2], buf[3], buf[4]]), 12);
+        assert_eq!(i32::from_be_bytes([buf[5], buf[6], buf[7], buf[8]]), 1234);
+        assert_eq!(i32::from_be_bytes([buf[9], buf[10], buf[11], buf[12]]), 5678);
     }
 }

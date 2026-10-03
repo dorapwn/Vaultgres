@@ -370,7 +370,7 @@ mod tests {
     #[test]
     fn unknown_view_returns_none() {
         let cat = fresh_catalog();
-        let mut exec =
+        let exec =
             InformationSchemaScanExecutor::from_clause("information_schema.bogus", cat).unwrap();
         assert!(exec.is_none());
     }
@@ -471,7 +471,7 @@ mod tests {
     #[test]
     fn unknown_prefix_returns_none() {
         let cat = fresh_catalog();
-        let mut exec = InformationSchemaScanExecutor::from_clause("public.widgets", cat).unwrap();
+        let exec = InformationSchemaScanExecutor::from_clause("public.widgets", cat).unwrap();
         assert!(exec.is_none());
     }
 }
