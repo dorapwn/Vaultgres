@@ -30,13 +30,8 @@ pub type ColumnInfo = (String, &'static str);
 /// 2. Add a `*_schema()` function below returning its columns.
 /// 3. Add a `match` arm in
 ///    `InformationSchemaScanExecutor::try_new` to materialize rows.
-pub const INFORMATION_SCHEMA_VIEWS: &[&str] = &[
-    "schemata",
-    "tables",
-    "columns",
-    "table_constraints",
-    "referential_constraints",
-];
+pub const INFORMATION_SCHEMA_VIEWS: &[&str] =
+    &["schemata", "tables", "columns", "table_constraints", "referential_constraints"];
 
 /// Convenience: map a view name to its schema, if known.
 pub fn view_to_schema(view: &str) -> Option<TableSchema> {
@@ -239,11 +234,7 @@ mod tests {
     #[test]
     fn view_to_schema_recognizes_all_supported_views() {
         for v in INFORMATION_SCHEMA_VIEWS {
-            assert!(
-                view_to_schema(v).is_some(),
-                "view '{}' should resolve to a schema",
-                v
-            );
+            assert!(view_to_schema(v).is_some(), "view '{}' should resolve to a schema", v);
         }
     }
 

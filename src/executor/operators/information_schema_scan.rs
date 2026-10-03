@@ -44,10 +44,7 @@ impl InformationSchemaScanExecutor {
     /// Construct from a view name (the part after `information_schema.`).
     ///
     /// Returns `None` if the name is not a recognized `information_schema` view.
-    pub fn try_new(
-        view: &str,
-        catalog: Arc<Catalog>,
-    ) -> Result<Option<Self>, ExecutorError> {
+    pub fn try_new(view: &str, catalog: Arc<Catalog>) -> Result<Option<Self>, ExecutorError> {
         let Some(schema) = view_to_schema(view) else {
             return Ok(None);
         };
@@ -177,11 +174,7 @@ fn tables_rows(catalog: &Catalog) -> Vec<Tuple> {
     let table_names = catalog.list_tables();
     let mut out = Vec::with_capacity(table_names.len());
     for name in &table_names {
-        let table_type = if catalog.get_view(name).is_some() {
-            "VIEW"
-        } else {
-            "BASE TABLE"
-        };
+        let table_type = if catalog.get_view(name).is_some() { "VIEW" } else { "BASE TABLE" };
         out.push(tuple_with(
             &[
                 ("table_catalog", Value::Text("vaultgres".to_string())),
@@ -212,7 +205,10 @@ fn columns_rows(catalog: &Catalog) -> Vec<Tuple> {
                     ("column_name", Value::Text(col.name.clone())),
                     ("ordinal_position", Value::Int((ordinal + 1) as i64)),
                     ("column_default", Value::Null), // todo: emit Expr::to_sql() when added
-                    ("is_nullable", Value::Text(if col.is_not_null { "NO" } else { "YES" }.to_string())),
+                    (
+                        "is_nullable",
+                        Value::Text(if col.is_not_null { "NO" } else { "YES" }.to_string()),
+                    ),
                     ("data_type", Value::Text(data_type_name(&col.data_type).to_string())),
                     ("character_maximum_length", Value::Null),
                     ("character_octet_length", Value::Null),
@@ -306,10 +302,7 @@ fn make_constraint_row(
             ("is_deferrable", Value::Text("NO".to_string())),
             ("initially_deferred", Value::Text("NO".to_string())),
             ("enforced", Value::Text("YES".to_string())),
-            (
-                "column_list",
-                column_list.map(Value::Text).unwrap_or(Value::Null),
-            ),
+            ("column_list", column_list.map(Value::Text).unwrap_or(Value::Null)),
         ],
         &table_constraints_schema(),
     )
@@ -329,36 +322,15 @@ fn referential_constraints_rows(catalog: &Catalog) -> Vec<Tuple> {
             let unique_constraint_name = format!("{}_pkey", fk.ref_table);
             out.push(tuple_with(
                 &[
-                    (
-                        "constraint_catalog",
-                        Value::Text("vaultgres".to_string()),
-                    ),
+                    ("constraint_catalog", Value::Text("vaultgres".to_string())),
                     ("constraint_schema", Value::Text("public".to_string())),
                     ("constraint_name", Value::Text(constraint_name)),
-                    (
-                        "unique_constraint_catalog",
-                        Value::Text("vaultgres".to_string()),
-                    ),
-                    (
-                        "unique_constraint_schema",
-                        Value::Text("public".to_string()),
-                    ),
-                    (
-                        "unique_constraint_name",
-                        Value::Text(unique_constraint_name),
-                    ),
-                    (
-                        "match_option",
-                        Value::Text("NONE".to_string()),
-                    ),
-                    (
-                        "update_rule",
-                        Value::Text(format!("{:?}", fk.on_update).to_uppercase()),
-                    ),
-                    (
-                        "delete_rule",
-                        Value::Text(format!("{:?}", fk.on_delete).to_uppercase()),
-                    ),
+                    ("unique_constraint_catalog", Value::Text("vaultgres".to_string())),
+                    ("unique_constraint_schema", Value::Text("public".to_string())),
+                    ("unique_constraint_name", Value::Text(unique_constraint_name)),
+                    ("match_option", Value::Text("NONE".to_string())),
+                    ("update_rule", Value::Text(format!("{:?}", fk.on_update).to_uppercase())),
+                    ("delete_rule", Value::Text(format!("{:?}", fk.on_delete).to_uppercase())),
                 ],
                 &referential_constraints_schema(),
             ));
@@ -398,19 +370,18 @@ mod tests {
     #[test]
     fn unknown_view_returns_none() {
         let cat = fresh_catalog();
-        let mut exec = InformationSchemaScanExecutor::from_clause("information_schema.bogus", cat).unwrap();
+        let mut exec =
+            InformationSchemaScanExecutor::from_clause("information_schema.bogus", cat).unwrap();
         assert!(exec.is_none());
     }
 
     #[test]
     fn schemata_has_public_schema() {
         let cat = fresh_catalog();
-        let mut exec = InformationSchemaScanExecutor::from_clause(
-            "information_schema.schemata",
-            cat,
-        )
-        .unwrap()
-        .expect("schemata should be recognized");
+        let mut exec =
+            InformationSchemaScanExecutor::from_clause("information_schema.schemata", cat)
+                .unwrap()
+                .expect("schemata should be recognized");
         let row = exec.next().unwrap().expect("one row");
         assert_eq!(row.get("schema_name"), Some(&Value::Text("public".to_string())));
         assert!(exec.next().unwrap().is_none());
@@ -419,12 +390,9 @@ mod tests {
     #[test]
     fn tables_empty_catalog_returns_no_rows() {
         let cat = fresh_catalog();
-        let mut exec = InformationSchemaScanExecutor::from_clause(
-            "information_schema.tables",
-            cat,
-        )
-        .unwrap()
-        .expect("tables should be recognized");
+        let mut exec = InformationSchemaScanExecutor::from_clause("information_schema.tables", cat)
+            .unwrap()
+            .expect("tables should be recognized");
         assert!(exec.next().unwrap().is_none());
     }
 
@@ -445,12 +413,9 @@ mod tests {
             }],
         )
         .unwrap();
-        let mut exec = InformationSchemaScanExecutor::from_clause(
-            "information_schema.tables",
-            cat,
-        )
-        .unwrap()
-        .unwrap();
+        let mut exec = InformationSchemaScanExecutor::from_clause("information_schema.tables", cat)
+            .unwrap()
+            .unwrap();
         let row = exec.next().unwrap().expect("one row");
         assert_eq!(row.get("table_name"), Some(&Value::Text("widgets".to_string())));
         assert_eq!(row.get("table_type"), Some(&Value::Text("BASE TABLE".to_string())));
@@ -486,34 +451,20 @@ mod tests {
             ],
         )
         .unwrap();
-        let mut exec = InformationSchemaScanExecutor::from_clause(
-            "information_schema.columns",
-            cat,
-        )
-        .unwrap()
-        .unwrap();
+        let mut exec =
+            InformationSchemaScanExecutor::from_clause("information_schema.columns", cat)
+                .unwrap()
+                .unwrap();
         let r1 = exec.next().unwrap().expect("row 1");
         assert_eq!(r1.get("table_name"), Some(&Value::Text("products".to_string())));
         assert_eq!(r1.get("column_name"), Some(&Value::Text("id".to_string())));
         assert_eq!(r1.get("ordinal_position"), Some(&Value::Int(1)));
-        assert_eq!(
-            r1.get("is_nullable"),
-            Some(&Value::Text("NO".to_string()))
-        );
-        assert_eq!(
-            r1.get("data_type"),
-            Some(&Value::Text("integer".to_string()))
-        );
+        assert_eq!(r1.get("is_nullable"), Some(&Value::Text("NO".to_string())));
+        assert_eq!(r1.get("data_type"), Some(&Value::Text("integer".to_string())));
         let r2 = exec.next().unwrap().expect("row 2");
         assert_eq!(r2.get("column_name"), Some(&Value::Text("name".to_string())));
-        assert_eq!(
-            r2.get("is_nullable"),
-            Some(&Value::Text("YES".to_string()))
-        );
-        assert_eq!(
-            r2.get("data_type"),
-            Some(&Value::Text("text".to_string()))
-        );
+        assert_eq!(r2.get("is_nullable"), Some(&Value::Text("YES".to_string())));
+        assert_eq!(r2.get("data_type"), Some(&Value::Text("text".to_string())));
         assert!(exec.next().unwrap().is_none());
     }
 

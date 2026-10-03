@@ -59,10 +59,7 @@ fn run_select(
 #[test]
 fn select_from_information_schema_tables_lists_user_tables() {
     let catalog = catalog_with_two_tables();
-    let rows = run_select(
-        catalog,
-        "SELECT table_name, table_type FROM information_schema.tables",
-    );
+    let rows = run_select(catalog, "SELECT table_name, table_type FROM information_schema.tables");
     assert_eq!(rows.len(), 2, "expected 2 rows (users, orders)");
     let names: Vec<String> = rows
         .iter()
@@ -100,10 +97,7 @@ fn select_from_information_schema_columns_lists_columns() {
         })
         .expect("id column row");
     assert_eq!(r_id.get("ordinal_position"), Some(&vaultgres::catalog::Value::Int(1)));
-    assert_eq!(
-        r_id.get("is_nullable"),
-        Some(&vaultgres::catalog::Value::Text("YES".to_string()))
-    );
+    assert_eq!(r_id.get("is_nullable"), Some(&vaultgres::catalog::Value::Text("YES".to_string())));
     let r_name = rows
         .iter()
         .find(|r| {
@@ -153,10 +147,7 @@ fn unknown_information_schema_view_returns_plan_error() {
     };
     let planner = Planner::new_with_catalog(catalog);
     let plan_result = planner.plan(&stmt);
-    assert!(
-        plan_result.is_err(),
-        "unknown information_schema view should produce a plan error"
-    );
+    assert!(plan_result.is_err(), "unknown information_schema view should produce a plan error");
 }
 
 #[test]
