@@ -12,10 +12,8 @@ fn main() {
     // Emitting `cargo:rerun-if-env-changed=GIT_HASH` makes cargo rebuild
     // when the build-arg changes (Docker), so a new `--build-arg GIT_HASH=...`
     // produces a binary that reflects it without a source change.
-    let from_env = std::env::var("GIT_HASH")
-        .ok()
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty());
+    let from_env =
+        std::env::var("GIT_HASH").ok().map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
 
     let from_git = || -> String {
         Command::new("git")
@@ -25,11 +23,7 @@ fn main() {
             .filter(|o| o.status.success())
             .and_then(|o| {
                 let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
-                if s.is_empty() {
-                    None
-                } else {
-                    Some(s)
-                }
+                if s.is_empty() { None } else { Some(s) }
             })
             .unwrap_or_else(|| "unknown".to_string())
     };

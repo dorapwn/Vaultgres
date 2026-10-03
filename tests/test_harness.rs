@@ -4,8 +4,34 @@ use std::sync::atomic::{AtomicU16, Ordering};
 use std::thread;
 use std::time::Duration;
 use tempfile::TempDir;
+use tokio_postgres::NoTls;
 
 static PORT_COUNTER: AtomicU16 = AtomicU16::new(15433);
+
+/// Render a rowset as a pipe-separated text table. Tests only inspect
+/// `is_ok()`/`is_err()`; the body is informational. Expects the output
+/// of `Client::simple_query`, which yields a flat list of protocol
+/// messages (`Row`, `RowDescription`, `CommandComplete`).
+fn rows_to_string(items: Vec<tokio_postgres::SimpleQueryMessage>) -> String {
+    let mut out = String::new();
+    for item in items {
+        if let tokio_postgres::SimpleQueryMessage::Row(row) = item {
+            let cols = row.columns();
+            for (i, col) in cols.iter().enumerate() {
+                if i > 0 {
+                    out.push('|');
+                }
+                match row.try_get(i) {
+                    Ok(Some(s)) => out.push_str(&format!("{}={}", col.name(), s)),
+                    Ok(None) => out.push_str(&format!("{}=NULL", col.name())),
+                    Err(_) => out.push_str(&format!("{}=?", col.name())),
+                }
+            }
+            out.push('\n');
+        }
+    }
+    out
+}
 
 /// Resolve the directory containing the `vaultgres` binary that this
 /// test binary was built alongside. Honors `CARGO_TARGET_DIR` and the
@@ -113,27 +139,53 @@ performance:
     }
 
     pub fn execute_sql(&self, sql: &str) -> Result<String, String> {
-        let output = Command::new("psql")
-            .args([
-                "-h",
-                "localhost",
-                "-p",
-                &self.port.to_string(),
-                "-U",
-                "postgres",
-                "-d",
-                "postgres",
-                "-c",
-                sql,
-            ])
-            .output()
-            .map_err(|e| format!("Failed to execute psql: {}", e))?;
+        // Drive the server through the libpq wire protocol using tokio-postgres
+        // instead of shelling out to an external `psql`. This removes the
+        // postgresql-client dependency, runs ~10x faster per query (no process
+        // spawn), and uses an output format that's stable across Postgres
+        // versions (psql's \pset formatting has changed between releases).
+        //
+        // tokio-postgres's connection future must be polled concurrently with
+        // the client. We use a `LocalSet` on a current-thread runtime so the
+        // spawned connection task runs on the same thread as the client.
+        //
+        // See https://github.com/neoalienson/Vaultgres/issues/38.
+        let port = self.port;
+        let sql = sql.to_owned();
+        let conn_str = format!(
+            "host=127.0.0.1 port={port} user=postgres dbname=postgres \
+             connect_timeout=5"
+        );
 
-        if output.status.success() {
-            Ok(String::from_utf8_lossy(&output.stdout).to_string())
-        } else {
-            Err(String::from_utf8_lossy(&output.stderr).to_string())
-        }
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|e| format!("Failed to build tokio runtime: {e}"))?;
+
+        let local = tokio::task::LocalSet::new();
+        local.block_on(&rt, async move {
+            let (client, connection) = tokio_postgres::connect(&conn_str, NoTls)
+                .await
+                .map_err(|e| format!("Connection failed: {e}"))?;
+
+            // Spawn the connection driver on the local task set so it
+            // shares the current thread with the client.
+            tokio::task::spawn_local(async move {
+                let _ = connection.await;
+            });
+
+            // Use `simple_query` instead of `query`. The simple Query
+            // protocol ('Q' message) is what vaultgres implements;
+            // tokio-postgres's `query` defaults to the extended
+            // Parse/Bind/Execute protocol which vaultgres doesn't yet
+            // support. simple_query is the protocol-level equivalent
+            // of `psql -c "..."`.
+            client
+                .simple_query(sql.as_str())
+                .await
+                .map(rows_to_string)
+                .map_err(|e| format!("Query failed: {e}"))
+        })
     }
 
     pub fn port(&self) -> u16 {
