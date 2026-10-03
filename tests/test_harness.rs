@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use std::sync::atomic::{AtomicU16, Ordering};
 use std::thread;
@@ -5,6 +6,37 @@ use std::time::Duration;
 use tempfile::TempDir;
 
 static PORT_COUNTER: AtomicU16 = AtomicU16::new(15433);
+
+/// Resolve the directory containing the `vaultgres` binary that this
+/// test binary was built alongside. Honors `CARGO_TARGET_DIR` and the
+/// `OUT_DIR` / `CARGO_BIN_EXE_<name>` env vars that cargo sets for
+/// integration tests; falls back to `./target/debug/vaultgres` for
+/// `cargo test` (no env) and to `./target/release-<profile>/vaultgres`
+/// when the only signal is `cfg(debug_assertions)`.
+///
+/// See https://github.com/neoalienson/Vaultgres/issues/37.
+fn vaultgres_binary_path() -> PathBuf {
+    // 1. Cargo sets CARGO_BIN_EXE_vaultgres for the `vaultgres` bin crate
+    //    when integration tests are built with `cargo test --bin vaultgres`
+    //    or via a [[test]] that depends on the bin. Most reliable.
+    if let Ok(path) = std::env::var("CARGO_BIN_EXE_vaultgres") {
+        return PathBuf::from(path);
+    }
+
+    // 2. CARGO_TARGET_DIR + profile → resolve ourselves.
+    let profile = if cfg!(debug_assertions) { "debug" } else { "release" };
+    let target_dir = std::env::var("CARGO_TARGET_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| PathBuf::from("target"));
+    let candidate = target_dir.join(profile).join("vaultgres");
+    if candidate.exists() {
+        return candidate;
+    }
+
+    // 3. Last resort: assume the test is being run from the repo root
+    //    with the default cargo target directory.
+    PathBuf::from("./target").join(profile).join("vaultgres")
+}
 
 pub struct TestServer {
     port: u16,
@@ -59,12 +91,21 @@ performance:
         let config_path = data_dir.path().join("config.yaml");
         std::fs::write(&config_path, config_content).expect("Failed to write config");
 
-        let process = Command::new("./target/debug/vaultgres")
+        let binary = vaultgres_binary_path();
+        let process = Command::new(&binary)
             .env("VAULTGRES_CONFIG", config_path.to_str().unwrap())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
-            .expect("Failed to start server");
+            .unwrap_or_else(|e| {
+                panic!(
+                    "Failed to start server at {}: {}. \
+                     Set CARGO_BIN_EXE_vaultgres or build with \
+                     `cargo build --bin vaultgres`.",
+                    binary.display(),
+                    e
+                )
+            });
 
         thread::sleep(Duration::from_secs(3));
 
