@@ -7,8 +7,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends musl-dev && rm 
 # Add musl target for static linking
 RUN rustup target add x86_64-unknown-linux-musl
 
-# Set git hash build-arg
-ARG GIT_HASH
+# Pass the git hash into the build via cargo's env. With the default
+# `GIT_HASH=unknown`, the embedded version banner in `vaultgres --version`
+# will read "git hash: unknown" — same behavior as before when .git/ is
+# stripped from the build context.
+#
+# Callers who want the real hash baked in should pass it explicitly:
+#   docker build --build-arg GIT_HASH="$(git rev-parse --short HEAD)" .
+#
+# build.rs (https://github.com/neoalienson/Vaultgres/issues/39) honors
+# this env var with a `cargo:rerun-if-env-changed=GIT_HASH` directive
+# so a different --build-arg produces a different binary.
+ARG GIT_HASH=unknown
 ENV GIT_HASH=${GIT_HASH}
 
 # Create app directory
