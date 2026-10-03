@@ -26,6 +26,7 @@ mod expression_index_test;
 mod fk_action_test;
 mod function_hints_test;
 mod group_by_executor_test;
+mod information_schema_test;
 // mod index_only_scan_test; // Disabled
 mod index_selection_test;
 mod index_test;

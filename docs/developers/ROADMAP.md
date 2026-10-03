@@ -231,21 +231,8 @@ VaultGres development roadmap with planned features and milestones.
 
 ## Version 0.5.0 (Beta)
 
-**Replication & High Availability**
-- Streaming replication (async)
-- Logical replication with publications/subscriptions
-- Replication slots
-- Automatic failover with health checks
-- Read replicas with load balancing
-- Cascading replication
-
-**Backup & Recovery**
-- Online backups (pg_basebackup compatible)
-- Point-in-time recovery (PITR)
-- Incremental backups
-- Backup compression (gzip, zstd)
-- Backup verification
-- Restore testing automation
+**Replication & High Availability** — tracked in [#24](https://github.com/neoalienson/Vaultgres/issues/24)
+**Backup & Recovery** — tracked in [#25](https://github.com/neoalienson/Vaultgres/issues/25)
 
 **Monitoring & Observability**
 - ✅ Prometheus metrics exporter
@@ -334,31 +321,11 @@ VaultGres development roadmap with planned features and milestones.
 
 ## Version 0.7.0 (RC)
 
-**Security**
-- TLS/SSL support with certificate validation
-- SCRAM-SHA-256 authentication
-- Certificate-based authentication
-- Row-level security (RLS) policies
-- Column-level permissions
-- Audit logging with configurable events
-- Password policies and expiration
-- Role-based access control (RBAC)
+**Security** — tracked in [#5](https://github.com/neoalienson/Vaultgres/issues/5) through [#12](https://github.com/neoalienson/Vaultgres/issues/12)
 
-**Administration**
-- Online schema changes (ALTER TABLE without locks)
-- Configuration hot reload
-- Dynamic memory allocation
-- Tablespace management
-- Database templates
-- pg_dump/pg_restore compatibility
-- Migration tools from PostgreSQL
+**Administration** — tracked in [#13](https://github.com/neoalienson/Vaultgres/issues/13) through [#19](https://github.com/neoalienson/Vaultgres/issues/19)
 
-**Compatibility**
-- PostgreSQL 16 wire protocol compatibility
-- Foreign data wrappers (FDW) framework
-- Extensions API with dynamic loading
-- System catalog compatibility
-- Information schema views
+**Compatibility** — tracked in [#20](https://github.com/neoalienson/Vaultgres/issues/20) through [#23](https://github.com/neoalienson/Vaultgres/issues/23). Issue [#23](https://github.com/neoalienson/Vaultgres/issues/23) (information_schema views) is partially implemented — `schemata`, `tables`, `columns`, `table_constraints`, and `referential_constraints` are available today; `pg_catalog.*` is not yet implemented.
 
 
 ## Version 1.0.0 (Stable)
@@ -367,10 +334,10 @@ VaultGres development roadmap with planned features and milestones.
 - ✅ Comprehensive unit testing (553 tests)
 - ✅ Edge case testing (79 tests)
 - ✅ Docker-based E2E testing
-- 🚧 Fuzz testing (parser, optimizer, executor)
-- 🚧 Performance benchmarks (TPC-C, TPC-H, TPC-DS)
-- 🚧 Stress testing (1M+ QPS sustained)
-- 🚧 Chaos engineering tests
+- 🚧 Fuzz testing (parser, optimizer, executor) — tracked in [#27](https://github.com/neoalienson/Vaultgres/issues/27)
+- 🚧 Performance benchmarks (TPC-C, TPC-H, TPC-DS) — tracked in [#26](https://github.com/neoalienson/Vaultgres/issues/26)
+- 🚧 Stress testing (1M+ QPS sustained) — tracked in [#26](https://github.com/neoalienson/Vaultgres/issues/26)
+- 🚧 Chaos engineering tests — tracked in [#26](https://github.com/neoalienson/Vaultgres/issues/26)
 - 🚧 Complete documentation suite
 - 🚧 Migration tools from PostgreSQL
 - 🚧 Production deployment guide

@@ -179,6 +179,33 @@ impl Parser {
         }
     }
 
+    /// Consume a dotted identifier chain like `information_schema.tables`,
+    /// returning the components joined with `.` if more than one.
+    ///
+    /// If only a single identifier is present, returns it unchanged.
+    ///
+    /// Used by SELECT FROM and similar contexts where the SQL grammar
+    /// permits schema-qualified table names.
+    ///
+    /// Tracked by https://github.com/neoalienson/Vaultgres/issues/23
+    pub(crate) fn expect_qualified_name(&mut self) -> Result<String> {
+        let mut parts: Vec<String> = Vec::new();
+        let first = self.expect_identifier()?;
+        parts.push(first);
+        while self.current_token() == &Token::Dot {
+            // peek: only consume if it's an identifier (not e.g. a number literal)
+            // so `SELECT 1.5` still parses.
+            if matches!(self.tokens.get(self.position + 1), Some(Token::Identifier(_))) {
+                self.advance(); // consume the dot
+                let next = self.expect_identifier()?;
+                parts.push(next);
+            } else {
+                break;
+            }
+        }
+        Ok(parts.join("."))
+    }
+
     pub(crate) fn current_token(&self) -> &Token {
         &self.tokens[self.position]
     }
