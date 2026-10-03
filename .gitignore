@@ -2,7 +2,10 @@
 /target/
 **/*.rs.bk
 *.pdb
-Cargo.lock
+
+# Cargo.lock is committed: the production Dockerfile (docker/Dockerfile)
+# `COPY Cargo.toml Cargo.lock ./` requires it for deterministic builds,
+# and .dockerignore must also allow it through. (Fixes #36.)
 
 # IDE
 .vscode/
