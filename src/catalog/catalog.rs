@@ -3,19 +3,16 @@ use super::crud_helper::CrudHelper;
 use super::data_manager::DataManager;
 use super::function_manager::FunctionManager;
 use super::index_manager::IndexManager;
-use super::insert_validator::InsertValidator;
 use super::persistence::Persistence;
 use super::table_manager::TableManager;
 use super::transaction_manager::TransactionManager2;
 use super::trigger_manager::TriggerManager;
 use super::type_manager::TypeManager;
-use super::update_delete_executor::UpdateDeleteExecutor;
 use super::view_manager::ViewManager;
 use super::{Aggregate, Function, TableSchema, Value};
 use crate::parser::ast::{
     AttachPartitionStmt, ColumnDef, CompositeTypeDef, CreateIndexStmt, CreateTriggerStmt, DataType,
-    DetachPartitionStmt, EnumTypeDef, Expr, ForeignKeyAction, ForeignKeyDef, OrderByExpr,
-    PartitionBoundSpec, SelectStmt,
+    DetachPartitionStmt, EnumTypeDef, Expr, ForeignKeyDef, OrderByExpr, SelectStmt,
 };
 use crate::transaction::{IsolationLevel, Transaction, TransactionManager};
 use std::collections::HashMap;

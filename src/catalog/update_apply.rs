@@ -3,14 +3,12 @@
 //! Handles applying assignment expressions to tuples during UPDATE operations.
 
 use super::{Catalog, TableSchema, Tuple, Value};
-use crate::catalog::predicate::PredicateEvaluator;
 use crate::catalog::select_executor::SelectExecutor;
 use crate::executor::Eval;
 use crate::executor::expr_evaluator::{eval_binary_op, eval_unary_op};
 use crate::parser::ast::Expr;
-use crate::transaction::{Snapshot, TransactionManager};
+use crate::transaction::Snapshot;
 use std::collections::HashMap;
-use std::sync::Arc;
 
 use super::update_validation::validate_assignment_type;
 

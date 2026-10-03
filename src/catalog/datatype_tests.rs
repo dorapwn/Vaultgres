@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn test_range_value() {
-        use crate::catalog::value::{Range, RangeBound};
+        use crate::catalog::value::Range;
         let r1 = Range::new(Some(Value::Int(1)), true, Some(Value::Int(5)), true);
         assert_eq!(r1.lower_bound(), Some(&Value::Int(1)));
         assert_eq!(r1.upper_bound(), Some(&Value::Int(5)));

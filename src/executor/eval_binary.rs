@@ -5,10 +5,7 @@
 
 use super::super::catalog::{EnumTypeDef, Value};
 use super::ExecutorError;
-use super::eval_helpers::{
-    compare_enum_text, compare_values, eval_like, value_to_sql_string,
-    values_equal_with_enum_support,
-};
+use super::eval_helpers::{compare_enum_text, compare_values, eval_like, value_to_sql_string};
 use crate::parser::ast::BinaryOperator;
 use std::collections::HashMap;
 use std::sync::Arc;

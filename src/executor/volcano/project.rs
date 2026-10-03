@@ -80,7 +80,6 @@ impl Executor for ProjectExecutor {
 mod tests {
     use super::*;
     use crate::executor::operators::executor::Tuple;
-    use std::collections::HashMap;
 
     /// Mock executor that returns predefined tuples
     struct MockExecutor {

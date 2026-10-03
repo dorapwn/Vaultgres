@@ -27,22 +27,7 @@ pub use crate::parser::lexer::Token;
 
 pub use self::cursors::{parse_close_cursor, parse_declare_cursor, parse_fetch_cursor};
 pub use self::drops::parse_drop;
-pub use self::functions::{
-    parse_create_aggregate, parse_create_function, parse_drop_aggregate, parse_drop_function,
-};
-pub use self::indexes::parse_create_index;
-pub use self::tables::{
-    parse_column_constraint, parse_column_def, parse_column_defs, parse_create_table,
-    parse_data_type, parse_decimal, parse_drop_table, parse_foreign_key_constraint,
-    parse_identifier_list, parse_partition_bound, parse_partition_method,
-    parse_partition_values_list, parse_primary_key_constraint, parse_table_element, parse_varchar,
-};
-pub use self::triggers::parse_create_trigger;
-pub use self::types::{
-    parse_alter, parse_alter_table, parse_alter_type, parse_attach_partition, parse_create_type,
-    parse_detach_partition, parse_drop_type,
-};
-pub use self::views::{parse_create_materialized_view, parse_create_view};
+pub use self::types::parse_alter;
 
 pub use crate::parser::error::{ParseError, Result};
 

@@ -16,11 +16,8 @@ use super::eval_builtins;
 use super::eval_helpers;
 
 pub use eval_binary::eval_binary_op;
-pub use eval_builtins::{eval_builtin_function, eval_unary_op};
 
 use super::operators::executor::{ExecutorError, Tuple};
-use crate::catalog::select_executor::SelectExecutor;
-use crate::catalog::tuple::Tuple as CatalogTuple;
 use crate::catalog::{Catalog, EnumTypeDef, Value};
 use crate::parser::ast::{BinaryOperator, Expr, SelectStmt};
 use crate::transaction::Snapshot;

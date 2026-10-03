@@ -51,7 +51,6 @@ impl ParallelCoordinator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::executor::test_helpers::TupleBuilder;
 
     struct TestOperator;
 
