@@ -22,7 +22,10 @@ pub fn parse_select_stmt(parser: &mut Parser) -> Result<SelectStmt> {
 
     let from = if parser.current_token() == &Token::From {
         parser.advance();
-        parser.expect_identifier()?
+        // Use qualified-name parsing so `information_schema.X` round-trips
+        // through to the planner as a single dotted FROM value. See
+        // https://github.com/neoalienson/Vaultgres/issues/23
+        parser.expect_qualified_name()?
     } else {
         String::new()
     };

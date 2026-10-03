@@ -9,6 +9,7 @@ mod data_manager;
 mod datetime_functions;
 mod function;
 mod function_manager;
+pub mod information_schema;
 mod index_manager;
 mod insert_validator;
 mod partition_pruning;

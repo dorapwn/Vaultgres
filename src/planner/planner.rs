@@ -4,6 +4,7 @@ use super::schema_derivation::{
 use crate::catalog::Value;
 use crate::catalog::{Catalog, TableSchema};
 use crate::executor::operators::executor::{Executor, ExecutorError, Tuple};
+use crate::executor::operators::information_schema_scan::InformationSchemaScanExecutor;
 use crate::executor::operators::seq_scan::SeqScanExecutor as OperatorSeqScanExecutor;
 use crate::executor::volcano::{
     CTEExecutor, DistinctExecutor, FilterExecutor, HashAggExecutor, JoinExecutor, JoinType,
@@ -63,7 +64,14 @@ impl Planner {
 
         // 1. SeqScan or SubqueryScan (for views)
         let plan: Box<dyn Executor> = if let Some(cat) = catalog {
-            if let Some(view_stmt) = cat.get_view(from_table_name) {
+            // 1a. information_schema.X — short-circuit to the dedicated scan executor.
+            //     See issue #23: https://github.com/neoalienson/Vaultgres/issues/23
+            if let Some(is_exec) =
+                InformationSchemaScanExecutor::from_clause(from_table_name, Arc::clone(cat))?
+            {
+                current_schema = is_exec.schema().clone();
+                Box::new(is_exec)
+            } else if let Some(view_stmt) = cat.get_view(from_table_name) {
                 // View expansion: recursively plan the view's query
                 let sub_plan = self.plan(&view_stmt)?;
                 // Build combined schema from all tables in the view (base + joins)
