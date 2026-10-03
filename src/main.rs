@@ -9,6 +9,35 @@ use vaultgres::config::Config;
 use vaultgres::protocol::Server;
 
 fn main() -> std::io::Result<()> {
+    // Subcommand / flag short-circuits. We intentionally don't pull in
+    // clap/argh because the surface area is tiny and an explicit match
+    // keeps the dependency tree lean.
+    let mut args = env::args().skip(1);
+    if let Some(arg) = args.next() {
+        match arg.as_str() {
+            "--version" | "-V" => {
+                println!("vaultgres {}", env!("CARGO_PKG_VERSION"));
+                println!("git hash: {}", option_env!("GIT_HASH").unwrap_or("unknown"));
+                return Ok(());
+            }
+            "--help" | "-h" => {
+                println!("vaultgres {}", env!("CARGO_PKG_VERSION"));
+                println!();
+                println!("USAGE:");
+                println!("    vaultgres [--version | --help]");
+                println!("    vaultgres [start]   (default; runs the server)");
+                println!();
+                println!("ENV:");
+                println!("    VAULTGRES_CONFIG   Path to config.yaml (default: config.yaml)");
+                return Ok(());
+            }
+            other => {
+                eprintln!("Unknown argument: {}\nTry `--help`.", other);
+                std::process::exit(2);
+            }
+        }
+    }
+
     // Load config from file or use default
     let config_path = env::var("VAULTGRES_CONFIG").unwrap_or_else(|_| "config.yaml".to_string());
     let config = if Path::new(&config_path).exists() {
