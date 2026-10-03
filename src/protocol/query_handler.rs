@@ -39,8 +39,45 @@ impl<S: Read + Write> Connection<S> {
         let msg = Message::parse(0, &data)?;
         log::debug!("Startup message: {:?}", msg);
         self.authenticated = true;
+        self.send_startup_response()?;
+        Ok(())
+    }
 
+    /// Send the standard post-startup response: AuthenticationOk,
+    /// session ParameterStatus, BackendKeyData, ReadyForQuery.
+    ///
+    /// Single source of truth for the wire-format sequence; called from
+    /// both the SSL-negotiated path (after `N`) and the plain startup
+    /// path (after the client sent the StartupMessage directly).
+    ///
+    /// Tracked by https://github.com/neoalienson/Vaultgres/issues/20
+    fn send_startup_response(&mut self) -> Result<(), ProtocolError> {
+        // PostgreSQL clients (psycopg2/3, asyncpg, psql, JDBC) expect:
+        //   1. AuthenticationOk (R)
+        //   2. Any number of ParameterStatus (S) and NoticeResponse (N)
+        //   3. BackendKeyData (K) — needed for cancellation, pid of session
+        //   4. ReadyForQuery (Z)
+        //
+        // Sending these in the wrong order, or omitting them, breaks
+        // session-parameter parsing in psycopg3 in particular (the
+        // DataRow decoder crashes when the protocol state machine is
+        // misaligned by the missing ParameterStatus / BackendKeyData
+        // sequence).
         Response::AuthenticationOk.write(&mut self.stream)?;
+
+        for (name, value) in [
+            ("client_encoding", "UTF8"),
+            ("DateStyle", "ISO, MDY"),
+            ("TimeZone", "UTC"),
+            ("server_version", "16.0 (Vaultgres 0.1.0)"),
+            ("server_encoding", "UTF8"),
+        ] {
+            Response::ParameterStatus { name: name.to_string(), value: value.to_string() }
+                .write(&mut self.stream)?;
+        }
+        Response::BackendKeyData { pid: std::process::id() as i32, secret: 0 }
+            .write(&mut self.stream)?;
+
         Response::ReadyForQuery.write(&mut self.stream)?;
         self.stream.flush()?;
         Ok(())
@@ -145,18 +182,22 @@ impl<S: Read + Write> Connection<S> {
             self.stream.flush()?;
             self.handle_startup()?;
         } else {
+            // Not an SSLRequest — must be a startup message. Read the
+            // rest of the payload, mark authenticated, then send the
+            // canonical startup response (single source of truth in
+            // send_startup_response). Previously this branch inlined
+            // AuthenticationOk + ReadyForQuery only, which broke
+            // psycopg3 / asyncpg session-parameter parsing.
+            //
+            // Tracked by https://github.com/neoalienson/Vaultgres/issues/20
             let mut remaining_data = vec![0u8; (len - 8) as usize];
             self.stream.read_exact(&mut remaining_data)?;
             let mut data = first_bytes[4..].to_vec();
             data.extend_from_slice(&remaining_data);
-
             let msg = Message::parse(0, &data)?;
-            log::debug!("Startup message: {:?}", msg);
+            log::debug!("Startup message (non-SSL path): {:?}", msg);
             self.authenticated = true;
-
-            Response::AuthenticationOk.write(&mut self.stream)?;
-            Response::ReadyForQuery.write(&mut self.stream)?;
-            self.stream.flush()?;
+            self.send_startup_response()?;
         }
 
         loop {
