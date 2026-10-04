@@ -186,7 +186,7 @@ impl GroupByExecutor {
     fn emit_group(
         buffer: &mut Vec<Tuple>,
         tuple: Tuple,
-        mut states: Vec<AggregateState>,
+        states: Vec<AggregateState>,
         aggregates: &[Expr],
     ) -> Result<(), ExecutorError> {
         let mut group_tuple = Tuple::new();
@@ -236,7 +236,7 @@ impl GroupByExecutor {
                     let val = Eval::eval_expr(expr, tuple)?;
                     key.insert(alias.clone(), val);
                 }
-                Expr::FunctionCall { name, args } => {
+                Expr::FunctionCall { name, args: _ } => {
                     let val = Eval::eval_expr(expr, tuple)?;
                     key.insert(name.clone(), val);
                 }

@@ -57,7 +57,7 @@ pub fn derive_agg_output_schema(
                 };
                 (agg_col_name, agg_data_type)
             }
-            Expr::FunctionCall { name, args } => {
+            Expr::FunctionCall { name: _, args } => {
                 let agg_col_name = get_aggregate_name(agg_expr);
                 let agg_data_type = if !args.is_empty() {
                     if let Expr::Column(col_name) = &args[0] {
@@ -99,7 +99,7 @@ pub fn derive_agg_output_schema(
                         }
                     };
                     (alias.clone(), agg_data_type)
-                } else if let Expr::FunctionCall { name, args } = expr.as_ref() {
+                } else if let Expr::FunctionCall { name: _, args } = expr.as_ref() {
                     let agg_col_name = alias.clone();
                     let agg_data_type = if !args.is_empty() {
                         if let Expr::Column(col_name) = &args[0] {

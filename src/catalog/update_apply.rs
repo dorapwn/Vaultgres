@@ -234,7 +234,7 @@ mod tests {
     use super::*;
     use crate::catalog::schema::TableSchema as TestSchema;
     use crate::parser::ast::{BinaryOperator, ColumnDef, DataType, Expr};
-    use crate::transaction::{Snapshot, TransactionManager, TupleHeader};
+    use crate::transaction::TupleHeader;
     use std::collections::HashMap;
 
     fn create_test_schema() -> TestSchema {

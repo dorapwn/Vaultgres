@@ -187,7 +187,7 @@ impl BufferPool {
                 let page_id = frame.page.id();
                 let dirty = frame.dirty;
                 let compressed = frame.compressed;
-                let algorithm = frame.compression_algorithm;
+                let _algorithm = frame.compression_algorithm;
                 let page = frame.page.clone();
                 drop(frame);
 

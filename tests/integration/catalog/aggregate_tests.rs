@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use vaultgres::catalog::*;
-use vaultgres::parser::ast::{AggregateFunc, ColumnDef, DataType, Expr, Statement};
+use vaultgres::parser::ast::{ColumnDef, DataType, Expr, Statement};
 
 fn create_test_table(catalog: &Catalog, name: &str, columns: Vec<ColumnDef>) {
     catalog.create_table(name.to_string(), columns).unwrap();

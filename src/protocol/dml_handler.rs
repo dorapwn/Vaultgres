@@ -4,7 +4,7 @@
 //! JOIN queries and CTE (WITH) queries.
 
 use crate::catalog::predicate::PredicateEvaluator;
-use crate::catalog::{Catalog, TableSchema, Value};
+use crate::catalog::{Catalog, Value};
 use crate::parser::ast::JoinType;
 use crate::parser::ast::{SelectStmt, Statement};
 use crate::planner::planner::Planner;

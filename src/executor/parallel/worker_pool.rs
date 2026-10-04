@@ -100,7 +100,6 @@ impl Drop for WorkerPool {
 mod tests {
     use super::*;
     use crate::catalog::Value;
-    use crate::executor::test_helpers::TupleBuilder;
 
     struct TestOperator;
 

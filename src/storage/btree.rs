@@ -146,8 +146,8 @@ impl BTree {
     pub fn compress_node(&mut self) -> Result<()> {
         if let Some(Node::Leaf(leaf)) = self.root.as_deref_mut() {
             if !leaf.compressed && should_compress(leaf.keys.iter().map(|k| k.len()).sum()) {
-                let mut all_keys = leaf.keys.clone();
-                let mut all_values = leaf.values.clone();
+                let all_keys = leaf.keys.clone();
+                let all_values = leaf.values.clone();
 
                 let serialized = Self::serialize_leaf(&all_keys, &all_values);
                 let compressed = compress(&serialized, self.compression_algorithm)?;

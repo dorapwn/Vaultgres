@@ -1,4 +1,6 @@
 use super::{CompositeTypeDef, TableSchema, Tuple, UniqueValidator, Value};
+// used by tests under `#[cfg(test)]`; reported as unused in --bin builds
+#[allow(unused_imports)]
 use crate::catalog::schema::TableStorageOptions;
 use crate::parser::ast::{ColumnDef, DataType, EnumTypeDef, Expr};
 use crate::transaction::TransactionManager;

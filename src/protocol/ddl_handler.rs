@@ -3,11 +3,8 @@
 //! Handles CREATE and DROP statements for tables, views, indexes,
 //! functions, types, triggers, and aggregates.
 
-use crate::catalog::{Aggregate, Catalog, Function, FunctionLanguage, Parameter, Value};
-use crate::parser::ast::{
-    FunctionParameter as AstFunctionParameter, FunctionReturnType, FunctionVolatility,
-    ParameterMode, Statement,
-};
+use crate::catalog::{Aggregate, Catalog, Function, FunctionLanguage, Parameter};
+use crate::parser::ast::{FunctionReturnType, FunctionVolatility, ParameterMode, Statement};
 use std::sync::Arc;
 
 pub enum DdlResult {

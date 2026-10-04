@@ -2,7 +2,7 @@
 // These tests verify that the planner produces output that executors can correctly consume
 
 use std::sync::Arc;
-use vaultgres::catalog::{Catalog, TableSchema};
+use vaultgres::catalog::Catalog;
 use vaultgres::parser::ast::{
     BinaryOperator, ColumnDef, DataType, Expr, JoinClause, JoinType, SelectStmt,
 };

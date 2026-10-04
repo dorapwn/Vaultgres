@@ -15,6 +15,11 @@ use super::eval_binary;
 use super::eval_builtins;
 use super::eval_helpers;
 
+// Re-exported so integration tests can call `eval_binary_op` directly. The
+// warning fires in --bin builds because the lib code only references
+// `eval_binary::eval_binary_op` (the module-qualified path), making this
+// re-export appear unused outside of cfg(test).
+#[allow(unused_imports)]
 pub use eval_binary::eval_binary_op;
 
 use super::operators::executor::{ExecutorError, Tuple};

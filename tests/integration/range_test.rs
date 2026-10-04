@@ -1,6 +1,5 @@
-use std::sync::Arc;
 use vaultgres::catalog::{Catalog, Range, Value};
-use vaultgres::parser::ast::{ColumnDef, DataType, Expr};
+use vaultgres::parser::ast::{ColumnDef, DataType};
 
 fn setup_catalog_with_ranges() -> Catalog {
     let catalog = Catalog::new();
@@ -167,7 +166,6 @@ fn test_range_value_clone() {
 
 #[test]
 fn test_range_value_serialize_deserialize() {
-    use vaultgres::catalog::RangeBound;
     let range = Range::new(Some(Value::Int(1)), true, Some(Value::Int(5)), true);
     let json = serde_json::to_string(&range).unwrap();
     let deserialized: Range = serde_json::from_str(&json).unwrap();

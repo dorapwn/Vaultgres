@@ -39,7 +39,7 @@ fn select_where(catalog_arc: &Arc<Catalog>, where_clause: Expr) -> Vec<Vec<Value
 
 #[test]
 fn test_select_with_where() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("id", DataType::Int), ("value", DataType::Int)],
         vec![
             vec![Expr::Number(1), Expr::Number(100)],
@@ -56,7 +56,7 @@ fn test_select_with_where() {
 
 #[test]
 fn test_select_with_not_equals() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("id", DataType::Int)],
         vec![vec![Expr::Number(1)], vec![Expr::Number(2)], vec![Expr::Number(3)]],
     );
@@ -68,7 +68,7 @@ fn test_select_with_not_equals() {
 
 #[test]
 fn test_select_with_less_than() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("value", DataType::Int)],
         vec![vec![Expr::Number(10)], vec![Expr::Number(20)], vec![Expr::Number(30)]],
     );
@@ -80,7 +80,7 @@ fn test_select_with_less_than() {
 
 #[test]
 fn test_select_with_greater_than() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("value", DataType::Int)],
         vec![vec![Expr::Number(10)], vec![Expr::Number(20)], vec![Expr::Number(30)]],
     );
@@ -94,7 +94,7 @@ fn test_select_with_greater_than() {
 
 #[test]
 fn test_where_with_and() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("id", DataType::Int), ("value", DataType::Int)],
         vec![
             vec![Expr::Number(1), Expr::Number(10)],
@@ -116,7 +116,7 @@ fn test_where_with_and() {
 
 #[test]
 fn test_where_with_or() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("id", DataType::Int)],
         vec![vec![Expr::Number(1)], vec![Expr::Number(2)], vec![Expr::Number(3)]],
     );
@@ -133,7 +133,7 @@ fn test_where_with_or() {
 
 #[test]
 fn test_like_operator() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("name", DataType::Text)],
         vec![
             vec![Expr::String("hello world".to_string())],
@@ -151,7 +151,7 @@ fn test_like_operator() {
 
 #[test]
 fn test_in_operator() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("id", DataType::Int)],
         vec![
             vec![Expr::Number(1)],
@@ -170,7 +170,7 @@ fn test_in_operator() {
 
 #[test]
 fn test_between_operator() {
-    let (catalog, catalog_arc) = setup_catalog_with_data(
+    let (_catalog, catalog_arc) = setup_catalog_with_data(
         vec![("value", DataType::Int)],
         vec![
             vec![Expr::Number(5)],

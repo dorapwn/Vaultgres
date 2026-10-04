@@ -3,7 +3,6 @@ mod materialized_view_tests {
     use crate::catalog::Catalog;
     use crate::parser::ast::{ColumnDef, DataType, Expr, SelectStmt};
     use std::sync::Arc;
-    use tempfile;
 
     fn setup_catalog_with_data() -> Arc<Catalog> {
         let catalog = Catalog::new();

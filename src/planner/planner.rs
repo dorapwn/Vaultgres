@@ -519,7 +519,7 @@ impl Planner {
                     };
                     (agg_col_name, agg_data_type)
                 }
-                Expr::FunctionCall { name, args } => {
+                Expr::FunctionCall { name: _, args } => {
                     let agg_col_name = Self::get_aggregate_name(agg_expr);
                     let agg_data_type = if !args.is_empty() {
                         if let Expr::Column(col_name) = &args[0] {
@@ -561,7 +561,7 @@ impl Planner {
                             }
                         };
                         (alias.clone(), agg_data_type)
-                    } else if let Expr::FunctionCall { name, args } = expr.as_ref() {
+                    } else if let Expr::FunctionCall { name: _, args } = expr.as_ref() {
                         let agg_col_name = alias.clone();
                         let agg_data_type = if !args.is_empty() {
                             if let Expr::Column(col_name) = &args[0] {
@@ -820,9 +820,7 @@ impl Planner {
 mod tests {
     use super::*;
     use crate::catalog::{Catalog, TableSchema};
-    use crate::parser::ast::{
-        BinaryOperator, ColumnDef, DataType, Expr, JoinClause, JoinType, SelectStmt,
-    };
+    use crate::parser::ast::{ColumnDef, DataType, Expr, SelectStmt};
     use std::sync::Arc;
 
     fn create_test_catalog() -> Arc<Catalog> {

@@ -169,7 +169,7 @@ impl ParallelSort {
 
         let mut heap: BinaryHeap<HeapEntry> = BinaryHeap::new();
         let mut results = Vec::with_capacity(limit);
-        let mut tuple_indices: Vec<usize> = vec![0; runs.len()];
+        let _tuple_indices: Vec<usize> = vec![0; runs.len()];
 
         // Initialize heap with first element from each run
         for (run_idx, run) in runs.iter().enumerate() {
@@ -350,7 +350,7 @@ struct ParallelSortOperator {
 }
 
 impl ParallelOperator for ParallelSortOperator {
-    fn process_morsel(&self, mut morsel: Morsel) -> Result<Morsel, ExecutorError> {
+    fn process_morsel(&self, morsel: Morsel) -> Result<Morsel, ExecutorError> {
         let partition_id = morsel.partition_id;
 
         // Get tuples from child operator

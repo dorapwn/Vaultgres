@@ -1,5 +1,5 @@
-use crate::catalog::{Catalog, CompositeTypeDef, Value};
-use crate::parser::ast::{ColumnDef, DataType, Expr, TypeKind};
+use crate::catalog::Catalog;
+use crate::parser::ast::{ColumnDef, DataType, Expr};
 
 #[cfg(test)]
 mod tests {

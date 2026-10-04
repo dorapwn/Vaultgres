@@ -1,7 +1,7 @@
 // Integration tests for VIEW functionality - Schema derivation with prefixed columns
 use std::sync::Arc;
-use vaultgres::catalog::{Catalog, TableSchema};
-use vaultgres::parser::ast::{BinaryOperator, ColumnDef, DataType, Expr, JoinClause, JoinType};
+use vaultgres::catalog::Catalog;
+use vaultgres::parser::ast::{ColumnDef, DataType, Expr};
 use vaultgres::planner::planner::Planner;
 
 fn create_test_catalog() -> Arc<Catalog> {
