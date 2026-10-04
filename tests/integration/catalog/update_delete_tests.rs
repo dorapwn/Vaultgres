@@ -7,7 +7,7 @@ use vaultgres::parser::ast::{
 #[test]
 fn test_update() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -25,7 +25,7 @@ fn test_update() {
 #[test]
 fn test_update_nonexistent_table() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let result = catalog.update("nonexistent", vec![("col".to_string(), Expr::Number(1))], None);
     assert!(result.is_err());
 }
@@ -33,7 +33,7 @@ fn test_update_nonexistent_table() {
 #[test]
 fn test_update_with_where() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -58,7 +58,7 @@ fn test_update_with_where() {
 #[test]
 fn test_delete() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     catalog.create_table("data".to_string(), columns).unwrap();
@@ -73,7 +73,7 @@ fn test_delete() {
 #[test]
 fn test_delete_empty_table() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     catalog.create_table("empty".to_string(), columns).unwrap();
@@ -84,7 +84,7 @@ fn test_delete_empty_table() {
 #[test]
 fn test_delete_with_where() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     catalog.create_table("data".to_string(), columns).unwrap();
@@ -107,7 +107,7 @@ fn test_delete_with_where() {
 #[test]
 fn test_update_arithmetic_add() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -133,7 +133,7 @@ fn test_update_arithmetic_add() {
 #[test]
 fn test_update_arithmetic_subtract() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -158,7 +158,7 @@ fn test_update_arithmetic_subtract() {
 #[test]
 fn test_update_arithmetic_multiply() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -183,7 +183,7 @@ fn test_update_arithmetic_multiply() {
 #[test]
 fn test_update_arithmetic_divide() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -208,7 +208,7 @@ fn test_update_arithmetic_divide() {
 #[test]
 fn test_update_arithmetic_modulo() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -233,7 +233,7 @@ fn test_update_arithmetic_modulo() {
 #[test]
 fn test_update_arithmetic_division_by_zero() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -259,7 +259,7 @@ fn test_update_arithmetic_division_by_zero() {
 #[test]
 fn test_update_arithmetic_nested() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -288,7 +288,7 @@ fn test_update_arithmetic_nested() {
 #[test]
 fn test_update_arithmetic_between_columns() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("a".to_string(), DataType::Int),
         ColumnDef::new("b".to_string(), DataType::Int),
@@ -314,7 +314,7 @@ fn test_update_arithmetic_between_columns() {
 #[test]
 fn test_update_column_reference() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -332,7 +332,7 @@ fn test_update_column_reference() {
 #[test]
 fn test_update_qualified_column() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -353,7 +353,7 @@ fn test_update_qualified_column() {
 #[test]
 fn test_update_arithmetic_with_where() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -386,7 +386,7 @@ fn test_update_arithmetic_with_where() {
 #[test]
 fn test_update_multiple_arithmetic_assignments() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("a".to_string(), DataType::Int),
         ColumnDef::new("b".to_string(), DataType::Int),
@@ -422,7 +422,7 @@ fn test_update_multiple_arithmetic_assignments() {
 #[test]
 fn test_update_self_reference() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![ColumnDef::new("counter".to_string(), DataType::Int)];
 
     catalog.create_table("data".to_string(), columns).unwrap();
@@ -445,7 +445,7 @@ fn test_update_self_reference() {
 #[test]
 fn test_update_arithmetic_complex_expression() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("a".to_string(), DataType::Int),
         ColumnDef::new("b".to_string(), DataType::Int),
@@ -479,7 +479,7 @@ fn test_update_arithmetic_complex_expression() {
 #[test]
 fn test_update_float_arithmetic() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("amount".to_string(), DataType::Float),
@@ -504,7 +504,7 @@ fn test_update_float_arithmetic() {
 #[test]
 fn test_update_mixed_int_float_arithmetic() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("amount".to_string(), DataType::Float),
@@ -529,7 +529,7 @@ fn test_update_mixed_int_float_arithmetic() {
 #[test]
 fn test_update_arithmetic_order_of_operations() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -558,7 +558,7 @@ fn test_update_arithmetic_order_of_operations() {
 #[test]
 fn test_update_unary_negation() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -582,7 +582,7 @@ fn test_update_unary_negation() {
 #[test]
 fn test_update_column_not_found() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -601,7 +601,7 @@ fn test_update_column_not_found() {
 #[test]
 fn test_update_target_column_not_found() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -617,7 +617,7 @@ fn test_update_target_column_not_found() {
 #[test]
 fn test_update_type_mismatch_arithmetic_to_text() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("name".to_string(), DataType::Text),

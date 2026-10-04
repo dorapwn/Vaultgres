@@ -239,14 +239,14 @@ pub fn parse_create_aggregate(parser: &mut Parser) -> Result<Statement> {
             Token::Cost => {
                 parser.advance();
                 parser.expect(Token::Equals)?;
-                if let Token::Number(n) = parser.current_token() {
+                if let Token::Number(_n) = parser.current_token() {
                     parser.advance();
                 }
             }
             Token::Rows => {
                 parser.advance();
                 parser.expect(Token::Equals)?;
-                if let Token::Number(n) = parser.current_token() {
+                if let Token::Number(_n) = parser.current_token() {
                     parser.advance();
                 }
             }

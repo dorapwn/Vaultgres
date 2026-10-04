@@ -264,7 +264,7 @@ fn table_constraints_rows(catalog: &Catalog) -> Vec<Tuple> {
             ));
             let _ = i;
         }
-        for (i, ck) in table.check_constraints.iter().enumerate() {
+        for (i, _ck) in table.check_constraints.iter().enumerate() {
             out.push(make_constraint_row(
                 &table.name,
                 format!("{}_check{}", table.name, i + 1),

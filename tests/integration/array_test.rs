@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use vaultgres::catalog::{Catalog, Value};
+use vaultgres::catalog::Catalog;
 use vaultgres::parser::ast::{ColumnDef, DataType, Expr};
 
 fn setup_catalog_with_arrays() -> Catalog {
@@ -168,10 +168,8 @@ fn test_delete_with_array_contains() {
 
 #[test]
 fn test_persistence_with_array_column() {
-    use std::fs;
-
     let temp_dir = tempfile::tempdir().unwrap();
-    let db_path = temp_dir.path().join("test_arrays.db");
+    let _db_path = temp_dir.path().join("test_arrays.db");
 
     {
         let catalog = setup_catalog_with_arrays();

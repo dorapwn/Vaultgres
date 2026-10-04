@@ -75,7 +75,7 @@ impl BRINIndex {
     }
 
     pub fn insert_compressed(&mut self, key: &[u8], tid: TupleId) -> Result<(), IndexError> {
-        let key_to_store = if should_compress(key.len()) {
+        let _key_to_store = if should_compress(key.len()) {
             let compressed = compress(key, self.compression_algorithm)
                 .map_err(|e| IndexError::Storage(e.to_string()))?;
             if compressed.len() < key.len() {

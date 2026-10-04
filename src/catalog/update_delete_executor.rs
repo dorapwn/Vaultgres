@@ -1,3 +1,6 @@
+// `Value` is only referenced from `#[cfg(test)]` tests; reported as unused
+// in --bin builds because the test module is gated off.
+#[allow(unused_imports)]
 use super::{Catalog, TableSchema, Tuple, Value};
 use crate::catalog::predicate::PredicateEvaluator;
 use crate::catalog::update_apply;

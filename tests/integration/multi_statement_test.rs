@@ -7,7 +7,7 @@ mod tests {
     #[test]
     fn test_multi_statement_transaction_commit() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),
@@ -36,7 +36,7 @@ mod tests {
     #[test]
     fn test_multi_statement_transaction_rollback() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),
@@ -72,7 +72,7 @@ mod tests {
     #[test]
     fn test_multi_statement_mixed_operations() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),
@@ -127,7 +127,7 @@ mod tests {
     #[test]
     fn test_multi_statement_with_savepoint() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),
@@ -204,7 +204,7 @@ mod tests {
     #[test]
     fn test_multi_statement_error_handling() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),
@@ -230,7 +230,7 @@ mod tests {
     #[test]
     fn test_sequential_multi_statement_transactions() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),
@@ -265,7 +265,7 @@ mod tests {
     #[test]
     fn test_multi_statement_large_transaction() {
         let catalog = Catalog::new();
-        let catalog_arc = Arc::new(catalog.clone());
+        let _catalog_arc = Arc::new(catalog.clone());
         catalog
             .create_table(
                 "users".to_string(),

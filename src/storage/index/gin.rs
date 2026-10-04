@@ -1,5 +1,5 @@
 use super::index_trait::{Index, IndexError, IndexType, TupleId};
-use crate::storage::compression::{CompressionAlgorithm, compress, should_compress};
+use crate::storage::compression::{CompressionAlgorithm, compress};
 use crate::storage::page::PageId;
 use std::collections::HashMap;
 

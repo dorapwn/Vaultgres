@@ -100,7 +100,6 @@ mod tests {
     use crate::catalog::{TableSchema, Value};
     use crate::executor::operators::executor::{Executor, ExecutorError, Tuple};
     use crate::parser::ast::{ColumnDef, DataType, OrderByExpr};
-    use std::collections::HashMap;
 
     struct MockExecutor {
         tuples: Vec<Tuple>,

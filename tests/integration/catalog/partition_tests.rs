@@ -1,4 +1,3 @@
-use std::sync::Arc;
 use vaultgres::catalog::*;
 use vaultgres::parser::ast::{
     AttachPartitionStmt, ColumnDef, DataType, DetachPartitionStmt, ForeignKeyAction, ForeignKeyDef,
@@ -330,7 +329,7 @@ fn test_is_partition() {
 #[test]
 fn test_get_parent_table() {
     let catalog = Catalog::new();
-    let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
+    let _columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     let parent_columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
     let parent_schema = TableSchema::with_partition(
@@ -373,7 +372,7 @@ fn test_create_partitioned_table_duplicate() {
 #[test]
 fn test_create_partition_nonexistent_parent() {
     let catalog = Catalog::new();
-    let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
+    let _columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     let partition_schema = TableSchema::as_partition(
         "orders_2024_01".to_string(),

@@ -1,5 +1,4 @@
 use std::sync::Arc;
-use vaultgres::executor::Executor;
 use vaultgres::parser::parse;
 use vaultgres::storage::heap::HeapFile;
 use vaultgres::storage::{BufferPool, PageId};

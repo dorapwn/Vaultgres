@@ -3,7 +3,7 @@ use vaultgres::catalog::{Catalog, Value};
 use vaultgres::executor::operators::executor::Tuple;
 use vaultgres::executor::parallel::coordinator::ParallelCoordinator;
 use vaultgres::executor::parallel::hash_agg::ParallelHashAgg;
-use vaultgres::executor::parallel::hash_join::{JoinType, ParallelHashJoin};
+use vaultgres::executor::parallel::hash_join::ParallelHashJoin;
 use vaultgres::executor::parallel::morsel::MorselGenerator;
 use vaultgres::executor::parallel::operator::ParallelOperator;
 use vaultgres::executor::parallel::seq_scan::ParallelSeqScan;
@@ -31,10 +31,7 @@ fn test_parallel_seq_scan_integration() {
 
 #[test]
 fn test_parallel_hash_join_integration() {
-    use vaultgres::catalog::Value;
-    use vaultgres::executor::operators::executor::Tuple;
     use vaultgres::executor::parallel::hash_join::JoinType;
-    use vaultgres::executor::parallel::operator::ParallelOperator;
 
     let catalog = Arc::new(Catalog::new());
     catalog
@@ -175,7 +172,7 @@ fn test_parallel_aggregation_integration() {
     for r in &result {
         let cat = r.get("category").unwrap();
         let sum = r.get("sum(value)").unwrap();
-        if let (Value::Int(cat_val), Value::Int(sum_val)) = (cat, sum) {
+        if let (Value::Int(cat_val), Value::Int(_sum_val)) = (cat, sum) {
             let expected_sum: i64 = (0..500).filter(|&i| i % 10 == *cat_val).sum();
             assert_eq!(sum, &Value::Int(expected_sum));
         }

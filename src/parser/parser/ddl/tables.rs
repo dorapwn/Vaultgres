@@ -5,8 +5,8 @@
 use super::super::Parser;
 use crate::parser::ast::{
     ColumnDef, CreateTableStmt, DataType, Expr, ForeignKeyAction, ForeignKeyDef, ForeignKeyRef,
-    PartitionBoundSpec, PartitionDef, PartitionHashBound, PartitionKey, PartitionListBound,
-    PartitionMethod, PartitionRangeBound, Statement,
+    PartitionBoundSpec, PartitionHashBound, PartitionKey, PartitionListBound, PartitionMethod,
+    PartitionRangeBound, Statement,
 };
 use crate::parser::error::{ParseError, Result};
 use crate::parser::lexer::Token;

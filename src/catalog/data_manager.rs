@@ -3,9 +3,7 @@ use super::tuple::Tuple;
 use super::update_delete_executor::UpdateDeleteExecutor;
 use super::value::Value;
 use crate::catalog::schema::TableSchema;
-use crate::parser::ast::{
-    CompositeTypeDef, EnumTypeDef, Expr, ForeignKeyDef, OrderByExpr, SelectStmt,
-};
+use crate::parser::ast::{CompositeTypeDef, EnumTypeDef, Expr, OrderByExpr, SelectStmt};
 use crate::transaction::{Transaction, TransactionManager};
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};

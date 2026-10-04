@@ -1,5 +1,5 @@
 use super::index_trait::{Index, IndexError, IndexType, TupleId};
-use crate::storage::compression::{CompressionAlgorithm, compress, decompress, should_compress};
+use crate::storage::compression::{CompressionAlgorithm, compress};
 use crate::storage::page::PageId;
 
 pub struct GiSTIndex {
@@ -123,7 +123,7 @@ impl GiSTIndex {
         Ok(())
     }
 
-    pub fn compress_entry(&mut self, key: &[u8]) -> Result<(), IndexError> {
+    pub fn compress_entry(&mut self, _key: &[u8]) -> Result<(), IndexError> {
         if let Some(GiSTNode::Leaf(leaf)) = self.root.as_deref_mut() {
             if !leaf.compressed {
                 let serialized = Self::serialize_leaf(leaf);

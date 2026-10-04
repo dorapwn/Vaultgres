@@ -327,14 +327,14 @@ impl PartitionPruner {
                 let min_val: Option<Value> = values
                     .iter()
                     .filter_map(|v| match v {
-                        Value::Int(n) => Some(v.clone()),
+                        Value::Int(_n) => Some(v.clone()),
                         _ => None,
                     })
                     .min_by(|a, b| compare_values(a, b).unwrap_or(std::cmp::Ordering::Equal));
                 let max_val: Option<Value> = values
                     .iter()
                     .filter_map(|v| match v {
-                        Value::Int(n) => Some(v.clone()),
+                        Value::Int(_n) => Some(v.clone()),
                         _ => None,
                     })
                     .max_by(|a, b| compare_values(a, b).unwrap_or(std::cmp::Ordering::Equal));
@@ -478,7 +478,7 @@ impl PartitionPruner {
 
         for pred in predicates {
             match pred {
-                PartitionPredicate::Equals(col, val) => {
+                PartitionPredicate::Equals(_col, val) => {
                     for (name, bound) in partitions {
                         for v in &bound.values {
                             if let Some(PartitionPredicate::Equals(_, bound_val)) =
@@ -491,7 +491,7 @@ impl PartitionPruner {
                         }
                     }
                 }
-                PartitionPredicate::In(col, values) => {
+                PartitionPredicate::In(_col, values) => {
                     let value_set: HashSet<&Value> = values.iter().collect();
                     for (name, bound) in partitions {
                         for v in &bound.values {
@@ -537,7 +537,7 @@ impl PartitionPruner {
 
         for pred in predicates {
             match pred {
-                PartitionPredicate::Equals(col, val) => {
+                PartitionPredicate::Equals(_col, val) => {
                     let hash_val = hash_value(val);
                     let matching: Vec<String> = partitions
                         .iter()
@@ -550,7 +550,7 @@ impl PartitionPruner {
                         return matching;
                     }
                 }
-                PartitionPredicate::In(col, values) => {
+                PartitionPredicate::In(_col, values) => {
                     let mut matching_set: HashSet<String> = HashSet::new();
                     for val in values {
                         let hash_val = hash_value(val);
@@ -631,7 +631,7 @@ fn hash_value(val: &Value) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::ast::{DataType, PartitionKey};
+    use crate::parser::ast::PartitionKey;
 
     fn make_partition_keys() -> Vec<PartitionKey> {
         vec![PartitionKey { column: "date_col".to_string(), opclass: None }]

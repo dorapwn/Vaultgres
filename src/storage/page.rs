@@ -325,7 +325,7 @@ impl Page {
     }
 
     fn write_item_id(&mut self, index: usize, item_id: &ItemId) {
-        let header = self.header();
+        let _header = self.header();
         let item_ids_start = PageHeader::SIZE;
         let offset = item_ids_start + index * ItemId::SIZE;
 
@@ -383,7 +383,7 @@ impl Page {
     ) -> Result<usize, CompressionError> {
         let header = self.header();
 
-        let (item_data, is_compressed) =
+        let (item_data, _is_compressed) =
             if should_compress(data.len()) && algorithm != CompressionAlgorithm::None {
                 let compressed = compress(data, algorithm)?;
                 if compressed.len() < data.len() {
@@ -447,7 +447,7 @@ impl Page {
         }
 
         let last_item_id = self.get_item_id(last_index).unwrap();
-        let item_size = last_item_id.length as usize;
+        let _item_size = last_item_id.length as usize;
 
         new_header.lower = (header.lower as usize - ItemId::SIZE) as u16;
 

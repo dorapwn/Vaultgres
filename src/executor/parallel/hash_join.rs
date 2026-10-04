@@ -445,7 +445,6 @@ impl ParallelOperator for ParallelHashJoin {
 mod tests {
     use super::*;
     use crate::catalog::Value;
-    use crate::executor::test_helpers::TupleBuilder;
 
     struct MockOperator {
         tuples: Vec<Tuple>,

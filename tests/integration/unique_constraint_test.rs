@@ -1,4 +1,4 @@
-use vaultgres::catalog::{Catalog, Value};
+use vaultgres::catalog::Catalog;
 use vaultgres::parser::ast::{ColumnDef, DataType, Expr, UniqueConstraint};
 
 #[test]

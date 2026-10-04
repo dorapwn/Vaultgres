@@ -1,6 +1,6 @@
 //! HashAggExecutor - Performs hash-based aggregation (GROUP BY and aggregates)
 
-use crate::catalog::{Aggregate, Catalog, TableSchema, Value};
+use crate::catalog::{Catalog, TableSchema, Value};
 use crate::executor::eval::Eval;
 use crate::executor::operators::executor::{Executor, ExecutorError, Tuple};
 use crate::executor::volcano::aggregate_state::{AggregateState, CustomAggregateState, hash_value};
@@ -18,7 +18,7 @@ pub struct HashAggExecutor {
 
 impl HashAggExecutor {
     pub fn new(
-        mut child: Box<dyn Executor>,
+        child: Box<dyn Executor>,
         group_by: Vec<Expr>,
         aggregates: Vec<Expr>,
         output_schema: TableSchema,
@@ -113,7 +113,7 @@ impl HashAggExecutor {
                         }
                     }
                     Expr::FunctionCall { name, args } => {
-                        if let Some(agg) =
+                        if let Some(_agg) =
                             catalog_clone.as_ref().and_then(|c| c.get_aggregate(name))
                         {
                             let arg_val = if !args.is_empty() {
@@ -255,7 +255,7 @@ impl HashAggExecutor {
 
     fn compute_final_value(
         state: &AggregateState,
-        agg_expr: &Expr,
+        _agg_expr: &Expr,
         catalog: &Option<Arc<Catalog>>,
     ) -> Result<Value, ExecutorError> {
         match state {
@@ -360,7 +360,7 @@ impl Executor for HashAggExecutor {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::catalog::TableSchema;
+    use crate::catalog::{Aggregate, TableSchema};
     use crate::executor::operators::executor::{Executor, ExecutorError, Tuple};
     use crate::parser::ast::{AggregateFunc, Expr};
 

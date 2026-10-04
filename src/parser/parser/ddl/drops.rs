@@ -5,8 +5,7 @@
 
 use super::super::Parser;
 use crate::parser::ast::{
-    DropAggregateStmt, DropIndexStmt, DropMaterializedViewStmt, DropTriggerStmt, DropViewStmt,
-    Statement,
+    DropIndexStmt, DropMaterializedViewStmt, DropTriggerStmt, DropViewStmt, Statement,
 };
 use crate::parser::error::Result;
 use crate::parser::lexer::Token;

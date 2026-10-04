@@ -1,11 +1,11 @@
 use std::sync::Arc;
 use vaultgres::catalog::*;
-use vaultgres::parser::ast::{AggregateFunc, BinaryOperator, ColumnDef, DataType, Expr};
+use vaultgres::parser::ast::{BinaryOperator, ColumnDef, DataType, Expr};
 
 #[test]
 fn test_insert_null_value() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("name".to_string(), DataType::Text),
@@ -53,7 +53,7 @@ fn test_select_from_empty_result() {
 #[test]
 fn test_update_no_matching_rows() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![
         ColumnDef::new("id".to_string(), DataType::Int),
         ColumnDef::new("value".to_string(), DataType::Int),
@@ -77,7 +77,7 @@ fn test_update_no_matching_rows() {
 #[test]
 fn test_delete_no_matching_rows() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     catalog.create_table("data".to_string(), columns).unwrap();
@@ -150,7 +150,7 @@ fn test_where_with_invalid_column() {
 #[test]
 fn test_update_invalid_column() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let columns = vec![ColumnDef::new("id".to_string(), DataType::Int)];
 
     catalog.create_table("data".to_string(), columns).unwrap();
@@ -475,7 +475,7 @@ fn test_zero_limit() {
 #[test]
 fn test_insert_to_nonexistent_table() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let result = catalog.insert("nonexistent", &[], vec![Expr::Number(1)]);
     assert!(result.is_err());
 }
@@ -483,7 +483,7 @@ fn test_insert_to_nonexistent_table() {
 #[test]
 fn test_update_nonexistent_table() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let result = catalog.update("nonexistent", vec![("col".to_string(), Expr::Number(1))], None);
     assert!(result.is_err());
 }
@@ -491,7 +491,7 @@ fn test_update_nonexistent_table() {
 #[test]
 fn test_delete_from_nonexistent_table() {
     let catalog = Catalog::new();
-    let catalog_arc = Arc::new(catalog.clone());
+    let _catalog_arc = Arc::new(catalog.clone());
     let result = catalog.delete("nonexistent", None);
     assert!(result.is_err());
 }

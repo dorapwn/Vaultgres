@@ -1,6 +1,6 @@
 use crate::catalog::{Aggregate, Value};
 use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
+use std::hash::Hash;
 
 #[derive(Debug, Clone)]
 pub enum AggregateState {

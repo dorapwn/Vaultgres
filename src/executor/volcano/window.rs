@@ -313,7 +313,7 @@ impl WindowExecutor {
         Self::get_value_from_tuple(&tuples[n - 1], &window.arg).unwrap_or(Value::Null)
     }
 
-    fn get_nth_offset(window: &WindowInfo) -> usize {
+    fn get_nth_offset(_window: &WindowInfo) -> usize {
         1
     }
 
@@ -332,7 +332,7 @@ impl WindowExecutor {
         Value::Int(bucket.max(1).min(num_buckets as i64))
     }
 
-    fn get_ntile_buckets(window: &WindowInfo) -> usize {
+    fn get_ntile_buckets(_window: &WindowInfo) -> usize {
         1
     }
 

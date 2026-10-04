@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use crate::catalog::{Catalog, EnumTypeDef, EnumValue, Value};
-    use crate::parser::ast::{ColumnDef, DataType, Expr};
+    use crate::parser::ast::{ColumnDef, DataType};
 
     #[test]
     fn test_enum_value_creation() {
