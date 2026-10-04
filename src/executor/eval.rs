@@ -482,16 +482,6 @@ impl Eval {
 // Re-exports for backwards compatibility
 // ============================================================================
 
-/// Evaluate a binary operation (re-exported for compatibility)
-pub fn eval_binary_operation(
-    left: &Value,
-    op: &BinaryOperator,
-    right: &Value,
-    enum_types: &Arc<RwLock<HashMap<String, EnumTypeDef>>>,
-) -> Result<Value, ExecutorError> {
-    eval_binary::eval_binary_op(left, op, right, enum_types)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

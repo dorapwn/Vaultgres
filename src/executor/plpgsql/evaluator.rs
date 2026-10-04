@@ -7,6 +7,10 @@ pub struct PlPgSqlExprEvaluator<'a> {
     variables: &'a HashMap<String, Value>,
 }
 
+// `eval_string` and any other methods only used by tests below get gated off
+// in --bin builds, so the dead-code warning fires there even though the
+// #[cfg(test)] mod tests below calls them.
+#[allow(dead_code)]
 impl<'a> PlPgSqlExprEvaluator<'a> {
     pub fn new(variables: &'a HashMap<String, Value>) -> Self {
         Self { variables }

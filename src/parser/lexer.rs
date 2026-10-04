@@ -596,8 +596,6 @@ impl Lexer {
             "REMAINDER" => Token::Remainder,
             "ATTACH" => Token::Attach,
             "DETACH" => Token::Detach,
-            "PARTITION" => Token::Partition,
-            "VALUES" => Token::Values,
             "OF" => Token::Of,
             _ => Token::Identifier(ident),
         };

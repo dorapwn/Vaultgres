@@ -255,13 +255,13 @@ impl WindowExecutor {
         }
         let current_val = Self::get_value_from_tuple(&tuples[idx], &window.arg).ok();
         let mut count_less_or_equal = 0i64;
-        let mut count_less = 0i64;
         for i in 0..tuples.len() {
             let val = Self::get_value_from_tuple(&tuples[i], &window.arg).ok();
             if let (Some(c), Some(v)) = (&current_val, &val) {
                 match Self::compare_values(v, c) {
-                    Ok(std::cmp::Ordering::Less) => count_less += 1,
-                    Ok(std::cmp::Ordering::Equal) => count_less_or_equal += 1,
+                    Ok(std::cmp::Ordering::Less) | Ok(std::cmp::Ordering::Equal) => {
+                        count_less_or_equal += 1
+                    }
                     _ => {}
                 }
             }
@@ -407,23 +407,6 @@ impl WindowExecutor {
         }
 
         Ok(results)
-    }
-
-    fn get_window_output_name(window: &WindowInfo) -> String {
-        match &window.func {
-            WindowFunc::RowNumber => "row_number".to_string(),
-            WindowFunc::Rank => "rank".to_string(),
-            WindowFunc::DenseRank => "dense_rank".to_string(),
-            WindowFunc::DenseRankWithNulls => "dense_rank".to_string(),
-            WindowFunc::PercentRank => "percent_rank".to_string(),
-            WindowFunc::CumeDist => "cume_dist".to_string(),
-            WindowFunc::Lag => format!("lag({})", "col"),
-            WindowFunc::Lead => format!("lead({})", "col"),
-            WindowFunc::FirstValue => format!("first_value({})", "col"),
-            WindowFunc::LastValue => format!("last_value({})", "col"),
-            WindowFunc::NthValue => format!("nth_value({})", "col"),
-            WindowFunc::Ntile => "ntile".to_string(),
-        }
     }
 }
 

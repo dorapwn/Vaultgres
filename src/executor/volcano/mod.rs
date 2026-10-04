@@ -22,7 +22,6 @@ mod limit;
 mod merge_join;
 mod nested_loop_join;
 mod project;
-mod seq_scan;
 mod sort;
 mod sql_function;
 mod subquery;
@@ -50,8 +49,6 @@ pub use limit::LimitExecutor;
 pub use merge_join::MergeJoinExecutor;
 pub use nested_loop_join::NestedLoopJoinExecutor;
 pub use project::ProjectExecutor;
-// Re-export SeqScanExecutor from operators for compatibility with planner
-pub use crate::executor::operators::seq_scan::SeqScanExecutor;
 pub use sort::SortExecutor;
 pub use sql_function::SqlFunctionExecutor;
 pub use subquery::SubqueryExecutor;

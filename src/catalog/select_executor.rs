@@ -10,6 +10,10 @@ use std::sync::RwLock;
 
 pub struct SelectExecutor;
 
+// `SelectExecutor` is an alternative execution path kept alongside the
+// Volcano executor for parity work. Not yet wired into the main code path,
+// but kept because tests under #[cfg(test)] exercise it directly.
+#[allow(dead_code)]
 impl SelectExecutor {
     pub fn execute(
         catalog: &Catalog,

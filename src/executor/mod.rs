@@ -83,8 +83,8 @@ pub use volcano::{
     AggregateExecutor, AggregateFunction, CTEColumns, CTEExecutor, CTEPlanner, CaseExecutor,
     DistinctExecutor, ExceptExecutor, FilterExecutor, GroupByExecutor, HashAggExecutor,
     HashJoinExecutor, HavingExecutor, IntersectExecutor, JoinExecutor, JoinType, LimitExecutor,
-    MergeJoinExecutor, NestedLoopJoinExecutor, ProjectExecutor, SeqScanExecutor, SortExecutor,
-    SubqueryExecutor, SubqueryScanExecutor, UnionExecutor, UnionType, VolcanoRecursiveCTEExecutor,
+    MergeJoinExecutor, NestedLoopJoinExecutor, ProjectExecutor, SortExecutor, SubqueryExecutor,
+    SubqueryScanExecutor, UnionExecutor, UnionType, VolcanoRecursiveCTEExecutor,
     VolcanoRecursiveCTEState,
 };
 
