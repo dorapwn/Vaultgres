@@ -339,15 +339,6 @@ fn referential_constraints_rows(catalog: &Catalog) -> Vec<Tuple> {
     out
 }
 
-fn match_on_action(action: crate::parser::ast::ForeignKeyAction) -> String {
-    use crate::parser::ast::ForeignKeyAction as A;
-    match action {
-        A::Cascade => "CASCADE".to_string(),
-        A::SetNull => "SET NULL".to_string(),
-        A::Restrict => "RESTRICT".to_string(),
-    }
-}
-
 /// `InformationSchemaScanExecutor` schema helpers re-exported through
 /// the executor module so tests below don't have to import them
 /// separately.

@@ -55,7 +55,7 @@ pub fn parse_foreign_key_constraint(parser: &mut Parser) -> Result<ForeignKeyDef
     })
 }
 
-pub fn parse_table_element(parser: &mut Parser) -> Result<TableElement> {
+fn parse_table_element(parser: &mut Parser) -> Result<TableElement> {
     match parser.current_token() {
         Token::Primary => Ok(TableElement::PrimaryKey(parse_primary_key_constraint(parser)?)),
         Token::Foreign => Ok(TableElement::ForeignKey(parse_foreign_key_constraint(parser)?)),
@@ -267,17 +267,6 @@ pub fn parse_partition_values_list(parser: &mut Parser) -> Result<Vec<Expr>> {
     }
     parser.expect(Token::RightParen)?;
     Ok(values)
-}
-
-pub fn parse_column_defs(parser: &mut Parser) -> Result<Vec<ColumnDef>> {
-    let mut columns = vec![parse_column_def(parser)?];
-
-    while parser.current_token() == &Token::Comma {
-        parser.advance();
-        columns.push(parse_column_def(parser)?);
-    }
-
-    Ok(columns)
 }
 
 pub fn parse_column_constraint(parser: &mut Parser, col_def: &mut ColumnDef) -> Result<()> {

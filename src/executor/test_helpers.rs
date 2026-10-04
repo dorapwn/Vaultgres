@@ -157,33 +157,6 @@ pub fn tuples_equal(a: &Tuple, b: &Tuple) -> bool {
     true
 }
 
-/// Compare two tuples approximately (for floating point)
-pub fn tuples_approximately_equal(a: &Tuple, b: &Tuple, epsilon: f64) -> bool {
-    if a.len() != b.len() {
-        return false;
-    }
-
-    for (key, value_a) in a {
-        match b.get(key) {
-            Some(value_b) => {
-                if !values_approximately_equal(value_a, value_b, epsilon) {
-                    return false;
-                }
-            }
-            _ => return false,
-        }
-    }
-
-    true
-}
-
-fn values_approximately_equal(a: &Value, b: &Value, epsilon: f64) -> bool {
-    match (a, b) {
-        (Value::Float(a), Value::Float(b)) => (a - b).abs() < epsilon,
-        _ => a == b,
-    }
-}
-
 // ============================================================================
 // Schema Helpers
 // ============================================================================
@@ -299,21 +272,6 @@ macro_rules! assert_tuple_eq {
         let b = &$b;
         if !$crate::executor::test_helpers::tuples_equal(a, b) {
             panic!("Tuples not equal:\n  left: {:?}\n right: {:?}", a, b);
-        }
-    }};
-}
-
-/// Assert that two tuples are approximately equal (for floating point)
-#[macro_export]
-macro_rules! assert_tuple_approx_eq {
-    ($a:expr, $b:expr, $epsilon:expr) => {{
-        let a = &$a;
-        let b = &$b;
-        if !$crate::executor::test_helpers::tuples_approximately_equal(a, b, $epsilon) {
-            panic!(
-                "Tuples not approximately equal (epsilon={}):\n  left: {:?}\n right: {:?}",
-                $epsilon, a, b
-            );
         }
     }};
 }

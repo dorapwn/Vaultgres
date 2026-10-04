@@ -12,7 +12,7 @@ enum IndexColumn {
     Expr(Expr),
 }
 
-pub fn parse_index_column(parser: &mut Parser) -> Result<IndexColumn> {
+fn parse_index_column(parser: &mut Parser) -> Result<IndexColumn> {
     if matches!(parser.current_token(), Token::Identifier(_)) {
         Ok(IndexColumn::Name(parser.expect_identifier()?))
     } else {

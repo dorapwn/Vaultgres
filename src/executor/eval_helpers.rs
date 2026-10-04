@@ -8,17 +8,6 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::RwLock;
 
-/// Convert a Value to string for concatenation
-pub fn value_to_string(val: &Value) -> String {
-    match val {
-        Value::Text(s) => s.clone(),
-        Value::Int(n) => n.to_string(),
-        Value::Bool(b) => b.to_string(),
-        Value::Null => String::new(),
-        _ => format!("{:?}", val),
-    }
-}
-
 /// Helper for comparison operations
 pub fn compare_values<F>(left: &Value, right: &Value, cmp_fn: F) -> Result<Value, ExecutorError>
 where
@@ -137,27 +126,6 @@ pub fn value_to_sql_string(value: &Value) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_value_to_string_int() {
-        assert_eq!(value_to_string(&Value::Int(42)), "42");
-    }
-
-    #[test]
-    fn test_value_to_string_text() {
-        assert_eq!(value_to_string(&Value::Text("hello".to_string())), "hello");
-    }
-
-    #[test]
-    fn test_value_to_string_bool() {
-        assert_eq!(value_to_string(&Value::Bool(true)), "true");
-        assert_eq!(value_to_string(&Value::Bool(false)), "false");
-    }
-
-    #[test]
-    fn test_value_to_string_null() {
-        assert_eq!(value_to_string(&Value::Null), "");
-    }
 
     #[test]
     fn test_value_to_sql_string_text() {

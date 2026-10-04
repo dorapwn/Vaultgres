@@ -2,18 +2,6 @@ use tempfile::TempDir;
 use vaultgres::catalog::Catalog;
 use vaultgres::parser::{Parser, Statement};
 
-fn with_temp_catalog<F>(test: F)
-where
-    F: FnOnce(&str, &Catalog) + FnOnce(&str, &Catalog),
-{
-    let temp_dir = TempDir::new().unwrap();
-    let data_dir = temp_dir.path().to_str().unwrap();
-    {
-        let catalog = Catalog::new_with_data_dir(data_dir);
-        test(data_dir, &catalog);
-    }
-}
-
 fn execute_sql(catalog: &Catalog, sql: &str) {
     let mut parser = Parser::new(sql).unwrap();
     let stmt = parser.parse().unwrap();

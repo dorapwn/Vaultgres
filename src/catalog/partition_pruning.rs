@@ -20,41 +20,7 @@ pub enum PartitionPredicate {
     Unknown,
 }
 
-impl PartitionPredicate {
-    fn invert_for_lower_bound(&self) -> Option<(String, Value)> {
-        match self {
-            PartitionPredicate::GreaterThan(col, val) => Some((col.clone(), val.clone())),
-            PartitionPredicate::GreaterThanOrEqual(col, val) => {
-                Some((col.clone(), increment_value(val)?))
-            }
-            _ => None,
-        }
-    }
-
-    fn invert_for_upper_bound(&self) -> Option<(String, Value)> {
-        match self {
-            PartitionPredicate::LessThan(col, val) => Some((col.clone(), decrement_value(val)?)),
-            PartitionPredicate::LessThanOrEqual(col, val) => Some((col.clone(), val.clone())),
-            _ => None,
-        }
-    }
-}
-
-fn increment_value(val: &Value) -> Option<Value> {
-    match val {
-        Value::Int(n) => Some(Value::Int(n + 1)),
-        Value::Float(f) => Some(Value::Float(f + 1.0)),
-        _ => None,
-    }
-}
-
-fn decrement_value(val: &Value) -> Option<Value> {
-    match val {
-        Value::Int(n) => Some(Value::Int(n - 1)),
-        Value::Float(f) => Some(Value::Float(f - 1.0)),
-        _ => None,
-    }
-}
+impl PartitionPredicate {}
 
 pub struct PartitionPruner;
 
@@ -385,81 +351,6 @@ impl PartitionPruner {
         }
     }
 
-    fn range_bound_matches_predicate(
-        pred: &PartitionPredicate,
-    ) -> Option<(Option<(String, Value)>, Option<(String, Value)>)> {
-        match pred {
-            PartitionPredicate::Equals(col, val) => {
-                Some((Some((col.clone(), val.clone())), Some((col.clone(), val.clone()))))
-            }
-            PartitionPredicate::GreaterThan(col, val) => {
-                Some((Some((col.clone(), val.clone())), None))
-            }
-            PartitionPredicate::GreaterThanOrEqual(col, val) => {
-                let incremented = increment_value(val)?;
-                Some((Some((col.clone(), incremented)), None))
-            }
-            PartitionPredicate::LessThan(col, val) => {
-                let decremented = decrement_value(val)?;
-                Some((None, Some((col.clone(), decremented))))
-            }
-            PartitionPredicate::LessThanOrEqual(col, val) => {
-                Some((None, Some((col.clone(), val.clone()))))
-            }
-            PartitionPredicate::Between(col, lower, upper) => {
-                Some((Some((col.clone(), lower.clone())), Some((col.clone(), upper.clone()))))
-            }
-            PartitionPredicate::And(preds) => {
-                let mut lower: Option<(String, Value)> = None;
-                let mut upper: Option<(String, Value)> = None;
-
-                for p in preds {
-                    if let Some((Some((col, val)), None)) =
-                        Some(Self::range_bound_matches_predicate(p)?)
-                    {
-                        lower = match &lower {
-                            None => Some((col, val)),
-                            Some((_, existing)) => Some((col.clone(), max_value(existing, &val)?)),
-                        };
-                    }
-                    if let Some((None, Some((col, val)))) =
-                        Some(Self::range_bound_matches_predicate(p)?)
-                    {
-                        upper = match &upper {
-                            None => Some((col, val)),
-                            Some((_, existing)) => Some((col.clone(), min_value(existing, &val)?)),
-                        };
-                    }
-                }
-
-                Some((lower, upper))
-            }
-            PartitionPredicate::Or(_) => None,
-            PartitionPredicate::AlwaysTrue => None,
-            PartitionPredicate::AlwaysFalse => Some((None, None)),
-            PartitionPredicate::Unknown => None,
-            PartitionPredicate::In(col, values) => {
-                let min_val = values
-                    .iter()
-                    .filter_map(|v| match v {
-                        Value::Int(n) => Some(*n),
-                        _ => None,
-                    })
-                    .min()
-                    .map(Value::Int);
-                let max_val = values
-                    .iter()
-                    .filter_map(|v| match v {
-                        Value::Int(n) => Some(*n),
-                        _ => None,
-                    })
-                    .max()
-                    .map(Value::Int);
-                Some((min_val.map(|v| (col.clone(), v)), max_val.map(|v| (col.clone(), v))))
-            }
-        }
-    }
-
     pub fn prune_partitions_list(
         partitions: &[(String, PartitionListBound)],
         predicates: &[PartitionPredicate],
@@ -599,22 +490,6 @@ fn compare_values(a: &Value, b: &Value) -> Option<std::cmp::Ordering> {
     }
 }
 
-fn max_value(a: &Value, b: &Value) -> Option<Value> {
-    match (a, b) {
-        (Value::Int(ai), Value::Int(bi)) => Some(Value::Int(*ai.max(bi))),
-        (Value::Float(af), Value::Float(bf)) => Some(Value::Float(af.max(*bf))),
-        _ => None,
-    }
-}
-
-fn min_value(a: &Value, b: &Value) -> Option<Value> {
-    match (a, b) {
-        (Value::Int(ai), Value::Int(bi)) => Some(Value::Int(*ai.min(bi))),
-        (Value::Float(af), Value::Float(bf)) => Some(Value::Float(af.min(*bf))),
-        _ => None,
-    }
-}
-
 fn hash_value(val: &Value) -> u64 {
     match val {
         Value::Int(n) => (*n as u64).wrapping_mul(31),
@@ -635,10 +510,6 @@ mod tests {
 
     fn make_partition_keys() -> Vec<PartitionKey> {
         vec![PartitionKey { column: "date_col".to_string(), opclass: None }]
-    }
-
-    fn make_partition_keys_int() -> Vec<PartitionKey> {
-        vec![PartitionKey { column: "id".to_string(), opclass: None }]
     }
 
     #[test]
@@ -941,18 +812,6 @@ mod tests {
         let pred = PartitionPredicate::Equals("id".to_string(), Value::Int(5));
         let result = PartitionPruner::prune_partitions_hash(&partitions, &[pred]);
         assert!(!result.is_empty());
-    }
-
-    #[test]
-    fn test_increment_value_int() {
-        assert_eq!(increment_value(&Value::Int(5)), Some(Value::Int(6)));
-        assert_eq!(increment_value(&Value::Int(-1)), Some(Value::Int(0)));
-    }
-
-    #[test]
-    fn test_decrement_value_int() {
-        assert_eq!(decrement_value(&Value::Int(5)), Some(Value::Int(4)));
-        assert_eq!(decrement_value(&Value::Int(0)), Some(Value::Int(-1)));
     }
 
     #[test]

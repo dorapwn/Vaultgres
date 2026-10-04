@@ -13,6 +13,9 @@ use std::collections::HashMap;
 use super::update_validation::validate_assignment_type;
 
 /// Apply assignments to a tuple
+// Only referenced from `UpdateDeleteExecutor::update` (dead code) and
+// `#[cfg(test)]` mod tests, so --bin builds report this as unused.
+#[allow(dead_code)]
 pub fn apply_assignments(
     tuple: &mut Tuple,
     assignments: &[(String, Expr)],
@@ -66,6 +69,9 @@ pub fn apply_assignments_with_tuples(
 }
 
 /// Evaluate an expression against tuple data
+// Only referenced from `apply_assignments` (gated by `#[allow(dead_code)]`
+// above) and tests. --bin builds report this as unused.
+#[allow(dead_code)]
 pub fn evaluate_expr(
     expr: &Expr,
     tuple_data: &[Value],
@@ -225,6 +231,9 @@ pub fn evaluate_expr_with_tuples(
 }
 
 /// Evaluate a function call
+// Only referenced from `evaluate_expr`/`evaluate_expr_with_tuples`, both
+// gated by `#[allow(dead_code)]` above. --bin builds report this as unused.
+#[allow(dead_code)]
 pub fn eval_function(name: &str, args: Vec<Value>, catalog: &Catalog) -> Result<Value, String> {
     Eval::eval_function_call(name, args, Some(catalog)).map_err(|e| format!("{}", e))
 }
